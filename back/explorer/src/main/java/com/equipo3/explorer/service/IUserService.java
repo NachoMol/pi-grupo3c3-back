@@ -10,8 +10,8 @@ public interface IUserService {
 
     List<UserDTO> getAllUsers();
     Optional<User> getUserById(Long id);
-    User saveUser(User user);
-    User updateUser(User user);
+    User saveUser(UserDTO userDTO);
+    User updateUser(UserDTO userDTO);
     void deleteUserById(Long id);
 
 }

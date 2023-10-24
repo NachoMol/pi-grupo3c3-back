@@ -22,7 +22,7 @@ public class UserService implements IUserService{
 
     @Override
     public List<UserDTO> getAllUsers() {
-        // A implementar con DTO o sin segun acordemos
+
         List<User> users = userRepository.findAll();
         List<UserDTO> usersDTO = new ArrayList<>();
         for(User user : users){
@@ -38,15 +38,19 @@ public class UserService implements IUserService{
     }
 
     @Override
-    public User saveUser(User user) {
+    public User saveUser(UserDTO userDTO) {
+        User user = mapper.convertValue(userDTO, User.class);
         return userRepository.save(user);
     }
 
     @Override
-    public User updateUser(User user) {
-
-        // A implementar segun requerimiento
-        return null;
+    public User updateUser(UserDTO userDTO) {
+        Optional<User> userExist = userRepository.findById(userDTO.getId());
+        User user = mapper.convertValue(userDTO, User.class);
+        if(userExist.isPresent()){
+            user.setPassword(user.getEmail());
+        }
+        return userRepository.save(user);
     }
 
     @Override

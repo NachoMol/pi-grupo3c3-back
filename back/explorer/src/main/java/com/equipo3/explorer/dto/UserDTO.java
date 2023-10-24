@@ -3,6 +3,7 @@ package com.equipo3.explorer.dto;
 import com.equipo3.explorer.model.Role;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
