@@ -11,7 +11,7 @@ public interface IUserService {
     List<UserDTO> getAllUsers();
     Optional<User> getUserById(Long id);
     User saveUser(UserDTO userDTO);
-    User updateUser(UserDTO userDTO);
+    Optional<User> updateUser(UserDTO userDTO);
     void deleteUserById(Long id);
 
 }

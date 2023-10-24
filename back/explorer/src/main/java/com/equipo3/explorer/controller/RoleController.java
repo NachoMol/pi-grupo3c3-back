@@ -23,34 +23,35 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<String> getRoleById(@PathVariable Long id){
+    public ResponseEntity<?> getRoleById(@PathVariable Long id){
         Optional<Role> roleSearch = roleService.getRoleById(id);
         if(roleSearch.isPresent()){
-            return ResponseEntity.ok("This role is: " + roleSearch.get());
+            return ResponseEntity.ok(roleSearch.orElseThrow());
         }
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role NOT_FOUND");
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping("/create")
     public ResponseEntity<Role> addRole(@RequestBody Role role){
-        return ResponseEntity.ok(roleService.saveRole(role));
+        return ResponseEntity.status(HttpStatus.CREATED).body(roleService.saveRole(role));
     }
 
     @PutMapping("/update")
-    public ResponseEntity<String> updateRole(@RequestBody Role role){
-        ResponseEntity<String> response;
-        if(roleService.getRoleById(role.getId()).isPresent()){
-            roleService.updateRole(role);
-            response = ResponseEntity.ok("Role updated");
-        }else{
-            response = ResponseEntity.status(HttpStatus.NOT_FOUND).body("Role NOT_FOUND");
+    public ResponseEntity<?> updateRole(@RequestBody Role role){
+        Optional<Role> roleOptional = roleService.updateRole(role);
+        if(roleOptional.isPresent()){
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         }
-        return response;
+        return ResponseEntity.notFound().build();
     }
 
     @DeleteMapping("/delete")
     public ResponseEntity<String> deleteRole(@PathVariable Long id){
-        roleService.deleteRoleById(id);
-        return ResponseEntity.ok("Role deleted successfully");
+        Optional<Role> roleOptional = roleService.getRoleById(id);
+        if(roleOptional.isPresent()){
+            roleService.deleteRoleById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
     }
 }
