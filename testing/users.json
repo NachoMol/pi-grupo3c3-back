@@ -1,0 +1,44 @@
+[
+  {
+    "id": 1,
+    "firstName": "Lionel",
+    "lastName": "Messi",
+    "username": "liomessi",
+    "password": "101010",
+    "email": "el10@gmail.com",
+    "phone": 659874,
+    "birthDate": "1987-10-10",
+    "role": {
+      "id": 1,
+      "name": "admin"
+    }
+  },
+  {
+    "id": 3,
+    "firstName": "Diego",
+    "lastName": "Maradona",
+    "username": "d10s",
+    "password": "101010",
+    "email": "d10s@gmail.com",
+    "phone": 2587465,
+    "birthDate": "1960-10-24",
+    "role": {
+      "id": 2,
+      "name": "client"
+    }
+  },
+  {
+    "id": 4,
+    "firstName": "Cristiano",
+    "lastName": "Ronaldo",
+    "username": "cr7",
+    "password": "070707",
+    "email": "cr7@gmail.com",
+    "phone": 2587465,
+    "birthDate": "1985-08-20",
+    "role": {
+      "id": 2,
+      "name": "client"
+    }
+  }
+]
