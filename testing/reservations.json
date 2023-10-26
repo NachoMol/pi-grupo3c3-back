@@ -1,0 +1,40 @@
+[
+  {
+    "id": 1,
+    "checkin": "2023-11-18",
+    "checkout": "2023-11-20",
+    "amount": 30800.5,
+    "user": {
+      "id": 1,
+      "firstName": "Cristiano",
+      "lastName": "Ronaldo",
+      "username": "cr7",
+      "password": "070707",
+      "email": "cr7@gmail.com",
+      "phone": 2587465,
+      "birthDate": "1985-08-20",
+      "role": {
+        "id": 1,
+        "name": "client"
+      }
+    },
+    "car": {
+      "id": 1,
+      "price": 17500,
+      "stock": 2,
+      "model": {
+        "id": 2,
+        "name": "Tracker",
+        "seats": "5",
+        "brand": {
+          "id": 1,
+          "name": "Chevrolet"
+        },
+        "carType": {
+          "id": 1,
+          "name": "SUV"
+        }
+      }
+    }
+  }
+]

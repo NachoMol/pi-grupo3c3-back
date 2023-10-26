@@ -1,0 +1,15 @@
+[
+  {
+    "id": 2,
+    "name": "Tracker",
+    "seats": "5",
+    "brand": {
+      "id": 1,
+      "name": "Chevrolet"
+    },
+    "carType": {
+      "id": 1,
+      "name": "SUV"
+    }
+  }
+]

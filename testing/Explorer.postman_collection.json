@@ -44,6 +44,15 @@
 					"request": {
 						"method": "POST",
 						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\":2,\r\n    \"firstName\" : \"Cristiano\",\r\n    \"lastName\" : \"Ronaldo\",\r\n    \"username\" : \"cr7\",\r\n    \"password\" : \"070707\",\r\n    \"email\" : \"cr7@gmail.com\",\r\n    \"phone\" : 2587465,\r\n    \"birthDate\" : \"1985-08-20\",\r\n    \"role\" : {\r\n        \"id\" : 2,\r\n        \"name\" : \"client\"\r\n    }\r\n\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
 							"raw": "localhost:8080/users/create",
 							"host": [
@@ -171,6 +180,111 @@
 							"path": [
 								"roles",
 								"delete"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Cars",
+			"item": [
+				{
+					"name": "localhost:8080/cars",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cars",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cars"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/cars/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "localhost:8080/cars/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"cars",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "API Reservartions",
+			"item": [
+				{
+					"name": "localhost:8080/reservations/create",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"checkin\": \"2023-11-18\",\r\n    \"checkout\": \"2023-11-20\",\r\n    \"amount\": 30800.50,\r\n    \"user\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Cristiano\",\r\n        \"lastName\": \"Ronaldo\",\r\n        \"username\": \"cr7\",\r\n        \"password\": \"070707\",\r\n        \"email\": \"cr7@gmail.com\",\r\n        \"phone\": 2587465,\r\n        \"birthDate\": \"1985-08-20\",\r\n        \"role\": {\r\n            \"id\": 1,\r\n            \"name\": \"client\"\r\n        }\r\n    },\r\n    \"car\": {\r\n        \"id\": 1,\r\n        \"price\": 17500.0,\r\n        \"stock\": 2,\r\n        \"model\": {\r\n            \"id\": 2,\r\n            \"name\": \"Tracker\",\r\n            \"seats\": \"5\",\r\n            \"brand\": {\r\n                \"id\": 1,\r\n                \"name\": \"Chevrolet\"\r\n            },\r\n            \"carType\": {\r\n                \"id\": 1,\r\n                \"name\": \"SUV\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reservations",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reservations"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "localhost:8080/reservations/create",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 1,\r\n    \"checkin\": \"2023-11-18\",\r\n    \"checkout\": \"2023-11-20\",\r\n    \"amount\": 30800.50,\r\n    \"user\": {\r\n        \"id\": 1,\r\n        \"firstName\": \"Cristiano\",\r\n        \"lastName\": \"Ronaldo\",\r\n        \"username\": \"cr7\",\r\n        \"password\": \"070707\",\r\n        \"email\": \"cr7@gmail.com\",\r\n        \"phone\": 2587465,\r\n        \"birthDate\": \"1985-08-20\",\r\n        \"role\": {\r\n            \"id\": 1,\r\n            \"name\": \"client\"\r\n        }\r\n    },\r\n    \"car\": {\r\n        \"id\": 1,\r\n        \"price\": 17500.0,\r\n        \"stock\": 2,\r\n        \"model\": {\r\n            \"id\": 2,\r\n            \"name\": \"Tracker\",\r\n            \"seats\": \"5\",\r\n            \"brand\": {\r\n                \"id\": 1,\r\n                \"name\": \"Chevrolet\"\r\n            },\r\n            \"carType\": {\r\n                \"id\": 1,\r\n                \"name\": \"SUV\"\r\n            }\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:8080/reservations/create",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"reservations",
+								"create"
 							]
 						}
 					},
