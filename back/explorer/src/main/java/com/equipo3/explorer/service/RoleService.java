@@ -36,8 +36,8 @@ public class RoleService implements IRoleService{
 
     @Override
     @Transactional
-    public Optional<Role> updateRole(Role role) {
-        Optional<Role> roleExist = roleRepository.findById(role.getId());
+    public Optional<Role> updateRole(Long id, Role role) {
+        Optional<Role> roleExist = roleRepository.findById(id);
         Role roleOptional = null;
         if(roleExist.isPresent()){
             Role roleDB = roleExist.orElseThrow();

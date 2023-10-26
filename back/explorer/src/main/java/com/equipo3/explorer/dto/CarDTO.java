@@ -12,5 +12,5 @@ public class CarDTO {
     private Long id;
     private Double price;
     private int stock;
-    private List<Model> models;
+    private Model model;
 }

@@ -49,8 +49,8 @@ public class UserService implements IUserService{
 
     @Override
     @Transactional
-    public Optional<User> updateUser(UserDTO userDTO) {
-        Optional<User> userExist = userRepository.findById(userDTO.getId());
+    public Optional<User> updateUser(Long id, UserDTO userDTO) {
+        Optional<User> userExist = userRepository.findById(id);
         User user = mapper.convertValue(userDTO, User.class);
         User userOptional = null;
         if(userExist.isPresent()){

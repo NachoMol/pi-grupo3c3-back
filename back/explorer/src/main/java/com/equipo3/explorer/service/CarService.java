@@ -1,7 +1,6 @@
 package com.equipo3.explorer.service;
 
 import com.equipo3.explorer.model.Car;
-import com.equipo3.explorer.model.Role;
 import com.equipo3.explorer.repository.ICarRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,8 +33,8 @@ public class CarService implements ICarService{
 
     @Override
     @Transactional
-    public Optional<Car> updateCar(Car car) {
-        Optional<Car> carExists = carRepository.findById(car.getId());
+    public Optional<Car> updateCar(Long id, Car car) {
+        Optional<Car> carExists = carRepository.findById(id);
         Car carOptional = null;
         if(carExists.isPresent()){
             Car carDB = carExists.orElseThrow();

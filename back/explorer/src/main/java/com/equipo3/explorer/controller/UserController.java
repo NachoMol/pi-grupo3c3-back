@@ -39,9 +39,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(userDTO));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateUser(@RequestBody UserDTO userDTO){
-        Optional<User> userOptional = userService.updateUser(userDTO);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateUser(@PathVariable Long id , @RequestBody UserDTO userDTO){
+        Optional<User> userOptional = userService.updateUser(id, userDTO);
         if(userOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).body(userOptional.orElseThrow());
         }

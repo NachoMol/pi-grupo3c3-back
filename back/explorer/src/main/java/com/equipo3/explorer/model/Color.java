@@ -6,12 +6,12 @@ import lombok.Setter;
 
 import java.util.List;
 
-@Getter @Setter
+/*@Getter @Setter
 @Entity
-@Table(name = "color")
+@Table(name = "color")*/
 public class Color {
 
-    @Id
+    /*@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -25,5 +25,5 @@ public class Color {
         this.id = id;
         this.name = name;
         this.models = models;
-    }
+    }*/
 }

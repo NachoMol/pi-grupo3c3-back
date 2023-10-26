@@ -36,9 +36,9 @@ public class RoleController {
         return ResponseEntity.status(HttpStatus.CREATED).body(roleService.saveRole(role));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateRole(@RequestBody Role role){
-        Optional<Role> roleOptional = roleService.updateRole(role);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateRole(@PathVariable Long id, @RequestBody Role role){
+        Optional<Role> roleOptional = roleService.updateRole(id, role);
         if(roleOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }

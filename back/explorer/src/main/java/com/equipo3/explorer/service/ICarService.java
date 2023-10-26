@@ -11,7 +11,7 @@ public interface ICarService {
     List<Car> getAllCars();
     Optional<Car> getCarById(Long id);
     Car saveCar(Car car);
-    Optional<Car> updateCar(Car car);
+    Optional<Car> updateCar(Long id, Car car);
     void deleteCarById(Long id);
 
 }

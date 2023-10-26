@@ -1,5 +1,6 @@
 package com.equipo3.explorer.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +17,7 @@ public class CarType {
     private Long id;
     private String name;
     @OneToMany(mappedBy = "carType")
+    @JsonIgnore
     private List<Model> models;
 
     public CarType() {

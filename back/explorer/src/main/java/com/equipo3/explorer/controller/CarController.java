@@ -34,13 +34,13 @@ public class CarController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<Car> addCar(@RequestBody Car car){
+    public ResponseEntity<?> addCar(@RequestBody Car car){
         return ResponseEntity.status(HttpStatus.CREATED).body(carService.saveCar(car));
     }
 
-    @PutMapping("/update")
-    public ResponseEntity<?> updateCar(@RequestBody Car car){
-        Optional<Car> carOptional = carService.updateCar(car);
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateCar(@PathVariable Long id, @RequestBody Car car){
+        Optional<Car> carOptional = carService.updateCar(id, car);
         if(carOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
