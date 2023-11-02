@@ -25,16 +25,22 @@ public class Product {
     private String name;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column(name = "stock", nullable = false)
+    private int stock;
     @ManyToOne
     @JoinColumn(name = "category_id")
+    @JsonIgnore
     private Category category;
     @ManyToOne
     @JoinColumn(name = "location_id")
+    @JsonIgnore
     private Location location;
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Set<Image> images;
     @ManyToMany
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
+    @JsonIgnore
     private Set<Detail> details;
     @CreationTimestamp
     @JsonIgnore
@@ -45,12 +51,10 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
-    public Product(String name, Double price, Category category, Location location, Set<Image> images, Set<Detail> details) {
+    public Product(String name, Double price, int stock) {
         this.name = name;
         this.price = price;
-        this.category = category;
-        this.location = location;
-        this.images = images;
-        this.details = details;
+        this.stock = stock;
     }
+
 }

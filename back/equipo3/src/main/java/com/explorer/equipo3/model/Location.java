@@ -20,10 +20,10 @@ public class Location {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "province", nullable = false)
-    private String province;
     @Column(name = "city", nullable = false)
     private String city;
+    @Column(name = "province", nullable = false)
+    private String province;
     @Column(name = "country", nullable = false)
     private String country;
     @CreationTimestamp
@@ -35,9 +35,9 @@ public class Location {
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updated_at;
 
-    public Location(String province, String city, String country) {
-        this.province = province;
+    public Location(String city, String province, String country) {
         this.city = city;
+        this.province = province;
         this.country = country;
     }
 }
