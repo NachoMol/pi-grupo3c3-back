@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.explorer</groupId>
-	<artifactId>equipo3</artifactId>
+	<artifactId>explorer</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>equipo3</name>
 	<description>Proyecto Integrador CTD Digital House</description>
