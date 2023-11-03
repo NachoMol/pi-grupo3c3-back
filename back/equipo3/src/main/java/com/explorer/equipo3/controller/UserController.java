@@ -31,9 +31,25 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/{email}")
+    public ResponseEntity<?> getUserByEmail(@PathVariable String email){
+        Optional<User> userSearch = userService.getUserByEmail(email);
+        if(userSearch.isPresent()){
+            return ResponseEntity.ok(userSearch.orElseThrow());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @PostMapping("/create")
-    public ResponseEntity<User> addUser(@RequestBody User user){
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.saveUser(user));
+    public ResponseEntity<User> addUser(@RequestBody User user) {
+        Optional<User> userOptional = userService.getUserByEmail(user.getEmail());
+        if (userOptional.isEmpty()) {
+            userService.saveUser(user);
+            return ResponseEntity.status(HttpStatus.CREATED).build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PutMapping("/update/{id}")

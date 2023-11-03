@@ -1,6 +1,5 @@
 package com.explorer.equipo3.service;
 
-import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.User;
 
 import java.util.List;
@@ -13,4 +12,6 @@ public interface IUserService {
     User saveUser(User user);
     Optional<User> updateUser(Long id, User user);
     void deleteUserById(Long id);
+
+    Optional<User> getUserByEmail(String email);
 }
