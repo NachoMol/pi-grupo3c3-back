@@ -4,6 +4,7 @@ import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IImageService;
 import com.explorer.equipo3.service.ImageService;
+import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +19,12 @@ public class ImageController {
 
     @Autowired
     private IImageService imageService;
+    @Autowired
+
 
     @GetMapping
     public ResponseEntity<List<Image>> getAllImages(){
+
         return ResponseEntity.ok(imageService.getAllImages());
     }
 

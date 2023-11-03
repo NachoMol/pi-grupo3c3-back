@@ -17,7 +17,7 @@ public class AssetController {
     @Autowired
     private S3Service s3Service;
     @PostMapping("/upload")
-    Map<String, String> upload(@RequestParam MultipartFile file){
+    private Map<String, String> upload(@RequestParam MultipartFile file){
         String key = null;
         try {
             key = s3Service.putObject(file);
@@ -31,7 +31,7 @@ public class AssetController {
     }
 
     @GetMapping(value = "/get-object", params = "key")
-    ResponseEntity<ByteArrayResource> getObject(@RequestParam String key){
+    private ResponseEntity<ByteArrayResource> getObject(@RequestParam String key){
         Asset asset = s3Service.getObject(key);
         ByteArrayResource resource = new ByteArrayResource(asset.getContent());
 
@@ -42,7 +42,7 @@ public class AssetController {
 
     }
     @DeleteMapping(value = "/delete-object", params = "key")
-    void deleteObject(@RequestParam String key){
+    private void deleteObject(@RequestParam String key){
         s3Service.deleteObject(key);
     }
 }
