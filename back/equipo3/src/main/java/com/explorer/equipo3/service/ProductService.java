@@ -5,8 +5,10 @@ import com.explorer.equipo3.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 
 @Service
 public class ProductService implements IProductService{
@@ -17,6 +19,31 @@ public class ProductService implements IProductService{
     @Override
     public List<Product> getAllProducts() {
         return productRepository.findAll();
+    }
+
+    @Override
+    public List<Product> getRandomProducts() {
+
+        List<Product> allProducts = productRepository.findAll();
+        int totalProducts = allProducts.size();
+
+        if (totalProducts <= 10) {
+            return allProducts; // Si tienes menos de 10 productos, simplemente devuelve todos.
+        }
+
+        List<Product> randomProducts = new ArrayList<>();
+        Random random = new Random();
+
+        // Selecciona 10 productos aleatorios
+        while (randomProducts.size() < 10) {
+            int randomIndex = random.nextInt(totalProducts);
+            Product randomProduct = allProducts.get(randomIndex);
+            if (!randomProducts.contains(randomProduct)) {
+                randomProducts.add(randomProduct);
+            }
+        }
+
+        return randomProducts;
     }
 
     @Override

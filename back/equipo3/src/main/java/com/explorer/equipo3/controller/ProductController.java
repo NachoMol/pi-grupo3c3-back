@@ -22,6 +22,9 @@ public class ProductController {
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
+    @GetMapping("/random")
+    public ResponseEntity<List<Product>> getRandomProducts(){return ResponseEntity.ok(productService.getRandomProducts());}
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id){
         Optional<Product> productSearch = productService.getProductById(id);
