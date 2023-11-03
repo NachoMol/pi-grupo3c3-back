@@ -25,8 +25,6 @@ public class Product {
     private String name;
     @Column(name = "price", nullable = false)
     private Double price;
-    @Column(name = "stock", nullable = false)
-    private int stock;
     @ManyToOne
     @JoinColumn(name = "category_id")
     @JsonIgnore
@@ -51,10 +49,9 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
-    public Product(String name, Double price, int stock) {
+    public Product(String name, Double price) {
         this.name = name;
         this.price = price;
-        this.stock = stock;
     }
 
 }

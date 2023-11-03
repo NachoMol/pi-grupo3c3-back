@@ -1,6 +1,7 @@
 package com.explorer.equipo3.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,6 +24,7 @@ public class User {
     private String password;
     @ManyToOne
     @JoinColumn(name = "role_id")
+    @JsonIgnore
     private Role role;
 
     public User(String name, String lastname, String email, String password) {
