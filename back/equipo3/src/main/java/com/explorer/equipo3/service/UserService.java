@@ -1,5 +1,6 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;

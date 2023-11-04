@@ -1,5 +1,6 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,13 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<User> addUser(@RequestBody User user) {
+    public ResponseEntity<?> addUser(@RequestBody User user) throws DuplicatedValueException {
         Optional<User> userOptional = userService.getUserByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
             userService.saveUser(user);
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+            throw new DuplicatedValueException("Email exist in Database");
         }
     }
 

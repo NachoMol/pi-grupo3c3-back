@@ -1,5 +1,6 @@
 package com.explorer.equipo3.controller;
 
+import com.amazonaws.services.s3.AmazonS3;
 import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IImageService;
@@ -19,8 +20,6 @@ public class ImageController {
 
     @Autowired
     private IImageService imageService;
-    @Autowired
-
 
     @GetMapping
     public ResponseEntity<List<Image>> getAllImages(){
@@ -37,7 +36,7 @@ public class ImageController {
         return ResponseEntity.notFound().build();
     }
 
-    @PostMapping("/create")
+    @PostMapping("/upload")
     public ResponseEntity<?> addImage(@RequestBody Image image){
         return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
     }

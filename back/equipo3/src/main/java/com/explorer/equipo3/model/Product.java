@@ -27,14 +27,11 @@ public class Product {
     private Double price;
     @ManyToOne
     @JoinColumn(name = "category_id")
-    @JsonIgnore
     private Category category;
     @ManyToOne
     @JoinColumn(name = "location_id")
-    @JsonIgnore
     private Location location;
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    @JsonIgnore
     private Set<Image> images;
     @ManyToMany
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
@@ -49,9 +46,11 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
-    public Product(String name, Double price) {
+
+    public Product(String name, Double price, Category category, Location location) {
         this.name = name;
         this.price = price;
+        this.category = category;
+        this.location = location;
     }
-
 }
