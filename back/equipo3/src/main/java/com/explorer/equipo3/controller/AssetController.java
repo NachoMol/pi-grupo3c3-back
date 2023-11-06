@@ -17,7 +17,7 @@ public class AssetController {
     @Autowired
     private S3Service s3Service;
     @PostMapping("/upload")
-    private Map<String, String> upload(@RequestParam MultipartFile file){
+    private Map<String, String> upload(@RequestParam("file") MultipartFile file){
         String key = null;
         try {
             key = s3Service.putObject(file);
@@ -25,7 +25,7 @@ public class AssetController {
             throw new RuntimeException(e);
         }
         Map<String, String > result = new HashMap<>();
-        result.put("key", key);
+
         result.put("url",s3Service.getObjectUrl(key));
         return result;
     }

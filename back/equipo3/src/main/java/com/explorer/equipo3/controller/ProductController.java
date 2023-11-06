@@ -58,6 +58,11 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @GetMapping("/by-categories")
+    public ResponseEntity<List<Product>> findProductByCategories(@RequestParam List<Long> categories) {
+        List<Product> products = productService.getProductByCategories(categories);
+        return ResponseEntity.ok(products);
+    }
 
 
 }
