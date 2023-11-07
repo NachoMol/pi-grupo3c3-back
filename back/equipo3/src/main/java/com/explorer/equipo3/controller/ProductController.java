@@ -1,7 +1,9 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
+import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private ICategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
@@ -37,8 +42,14 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(@RequestBody Product product){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        try {
+            // No es necesario obtener el ID de categoría
+            // simplemente configura la categoría en el producto
+            return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/update/{id}")
