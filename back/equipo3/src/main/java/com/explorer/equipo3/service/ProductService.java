@@ -63,6 +63,9 @@ public class ProductService implements IProductService{
         if (productExist.isPresent()){
             Product productDB = productExist.orElseThrow();
             productDB.setCity(product.getCity());
+            productDB.setCategory(product.getCategory());
+            productDB.setName(product.getName());
+            productDB.setDetails(product.getDetails());
             productOptional = productRepository.save(productDB);
         }
         return Optional.ofNullable(productOptional);
