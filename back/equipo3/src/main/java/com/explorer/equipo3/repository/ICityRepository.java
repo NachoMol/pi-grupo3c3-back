@@ -12,7 +12,7 @@ import java.util.List;
 
 @Repository
 public interface ICityRepository extends JpaRepository<City, Long> {
-    // consulta personalizada para recuperar City por province
-    @Query("SELECT p FROM city p WHERE p.province_id = :provinceId")
-    List<City> findByProvince(@Param("province_Id") Long provinceId);
+
+
+    List<City> findByCountry_Id(Long country_Id);
 }

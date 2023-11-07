@@ -1,9 +1,9 @@
 package com.explorer.equipo3.controller;
 
 import com.explorer.equipo3.model.City;
-import com.explorer.equipo3.model.Province;
-import com.explorer.equipo3.repository.IProvinceRepository;
+import com.explorer.equipo3.model.Country;
 import com.explorer.equipo3.service.ICityService;
+import com.explorer.equipo3.service.ICountryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,12 +12,13 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/city")
+@RequestMapping("/cities")
 public class CityController {
     @Autowired
     private ICityService cityService;
+
     @Autowired
-    private IProvinceRepository provinceRepository;
+    private ICountryService countryService;
 
     @GetMapping
     public ResponseEntity<List<City>> getAllCities(){
@@ -57,11 +58,11 @@ public class CityController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/province/{id}")
-    public ResponseEntity<List<City>> findByProvince(@PathVariable Long provinceId){
-        Optional<Province>  provinceSearch = provinceRepository.findById(provinceId);
-        if(provinceSearch.isPresent()){
-            List<City> citySearch = cityService.getByProvince(provinceId);
+    @GetMapping("/country")
+    public ResponseEntity<List<City>> findByProvince(@RequestParam Long countryId){
+        Optional<Country>  countrySearch = countryService.getCountryById(countryId);
+        if(countrySearch.isPresent()){
+            List<City> citySearch = cityService.getCitiesByCountry_id(countryId);
             return ResponseEntity.ok(citySearch);
         }
         return ResponseEntity.notFound().build();

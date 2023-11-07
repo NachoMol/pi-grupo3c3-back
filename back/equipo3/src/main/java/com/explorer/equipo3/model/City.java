@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "city")
+@Table(name = "cities")
 
 public class City {
 
@@ -31,8 +31,8 @@ public class City {
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updated_at;
     @ManyToOne
-    @JoinColumn(name = "province_id")
-    private Province province;
+    @JoinColumn(name = "country_id")
+    private Country country;
 
     public City(String city) {
         this.city = city;

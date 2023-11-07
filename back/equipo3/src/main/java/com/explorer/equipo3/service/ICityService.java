@@ -13,6 +13,6 @@ public interface ICityService {
         City saveCity(City location);
         Optional<City> updateCity(Long id, City city);
         void deleteCityById(Long id);
-        List<City> getByProvince(Long id);
+        List<City> getCitiesByCountry_id(Long country_id);
 
 }

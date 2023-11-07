@@ -16,7 +16,7 @@ import java.util.Set;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "country")
+@Table(name = "countries")
 public class Country {
 
     @Id
@@ -32,8 +32,8 @@ public class Country {
     @JsonIgnore
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updated_at;
-    @OneToMany(mappedBy = "country", fetch = FetchType.EAGER)
-    private Set<Province> provinces;
+   /* @OneToMany(mappedBy = "country", fetch = FetchType.EAGER)
+    private Set<City> cities;*/
 
     public Country(  String country) {
         this.country = country;
