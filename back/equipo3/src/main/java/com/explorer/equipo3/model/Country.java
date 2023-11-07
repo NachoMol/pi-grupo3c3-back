@@ -7,6 +7,8 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -14,16 +16,12 @@ import java.util.Date;
 @AllArgsConstructor
 @ToString
 @Entity
-@Table(name = "locations")
-public class Location {
+@Table(name = "countries")
+public class Country {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "city", nullable = false)
-    private String city;
-    @Column(name = "province", nullable = false)
-    private String province;
     @Column(name = "country", nullable = false)
     private String country;
     @CreationTimestamp
@@ -34,10 +32,10 @@ public class Location {
     @JsonIgnore
     @Column(name = "updated_at", nullable = false, updatable = false)
     private Date updated_at;
+   /* @OneToMany(mappedBy = "country", fetch = FetchType.EAGER)
+    private Set<City> cities;*/
 
-    public Location(String city, String province, String country) {
-        this.city = city;
-        this.province = province;
+    public Country(  String country) {
         this.country = country;
     }
 }

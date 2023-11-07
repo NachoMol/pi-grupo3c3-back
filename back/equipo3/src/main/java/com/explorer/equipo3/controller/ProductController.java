@@ -81,5 +81,11 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping("/byCategories")
+    public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
+
+        return productService.getProductByCategory_id(category_id);
+    }
+
 
 }
