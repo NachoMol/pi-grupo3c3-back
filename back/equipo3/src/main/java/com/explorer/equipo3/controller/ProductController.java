@@ -64,6 +64,7 @@ public class ProductController {
     public ResponseEntity<Product> addDetailsToProduct(
             @PathVariable Long id,
             @RequestBody Set<Long> detailIds) {
+        System.out.println("Received detailIds: " + detailIds);
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
@@ -81,6 +82,7 @@ public class ProductController {
             return ResponseEntity.notFound().build();
         }
     }
+
     @GetMapping("/byCategories")
     public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
 
