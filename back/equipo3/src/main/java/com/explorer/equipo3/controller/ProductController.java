@@ -1,5 +1,6 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/products")
@@ -58,6 +60,34 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }
 
+    @PostMapping("/{id}/add-details")
+    public ResponseEntity<Product> addDetailsToProduct(
+            @PathVariable Long id,
+            @RequestBody Set<Detail> details) {
+        Optional<Product> productOptional = productService.getProductById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.getDetails().addAll(details); // Agregar los detalles al producto
+            Product updatedProduct = productService.saveProduct(product);
+            return ResponseEntity.ok(updatedProduct);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
+    @DeleteMapping("/{id}/remove-details")
+    public ResponseEntity<Product> removeDetailsFromProduct(
+            @PathVariable Long id,
+            @RequestBody Set<Detail> details) {
+        Optional<Product> productOptional = productService.getProductById(id);
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+            product.getDetails().removeAll(details); // Eliminar los detalles del producto
+            Product updatedProduct = productService.saveProduct(product);
+            return ResponseEntity.ok(updatedProduct);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 
 }
