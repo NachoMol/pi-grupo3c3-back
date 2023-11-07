@@ -63,26 +63,18 @@ public class ProductController {
     @PostMapping("/{id}/add-details")
     public ResponseEntity<Product> addDetailsToProduct(
             @PathVariable Long id,
-            @RequestBody Set<Detail> details) {
+            @RequestBody Set<Long> detailIds) {
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            product.getDetails().addAll(details); // Agregar los detalles al producto
-            Product updatedProduct = productService.saveProduct(product);
-            return ResponseEntity.ok(updatedProduct);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
 
-    @DeleteMapping("/{id}/remove-details")
-    public ResponseEntity<Product> removeDetailsFromProduct(
-            @PathVariable Long id,
-            @RequestBody Set<Detail> details) {
-        Optional<Product> productOptional = productService.getProductById(id);
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            product.getDetails().removeAll(details); // Eliminar los detalles del producto
+            // Aquí debes convertir los IDs en objetos Detail y agregarlos al producto
+            for (Long detailId : detailIds) {
+                Detail detail = new Detail();
+                detail.setId(detailId);
+                product.getDetails().add(detail);
+            }
+
             Product updatedProduct = productService.saveProduct(product);
             return ResponseEntity.ok(updatedProduct);
         } else {
