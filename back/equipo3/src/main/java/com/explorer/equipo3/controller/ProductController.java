@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,17 +42,21 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(
-            @RequestParam(value = "file", required = false) MultipartFile file,
-            @RequestBody Product product) {
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
         try {
-            // Procesa la imagen si se proporciona
-            if (file != null) {
-                // Maneja el archivo
-            }
+            // Obtén el ID de categoría desde la solicitud
+            Long categoryId = product.getCategory().getId();
 
-            // Continúa con el procesamiento del producto
-            return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+            // A continuación, debes buscar la categoría por su ID y configurarla en el producto
+            Category category = categoryService.getCategoryById(categoryId).orElse(null);
+
+            if (category != null) {
+                product.setCategory(category);
+                // Ahora puedes guardar el producto
+                return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }

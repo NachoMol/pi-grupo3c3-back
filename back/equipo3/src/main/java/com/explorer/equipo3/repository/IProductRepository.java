@@ -1,5 +1,6 @@
 package com.explorer.equipo3.repository;
 
+import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
