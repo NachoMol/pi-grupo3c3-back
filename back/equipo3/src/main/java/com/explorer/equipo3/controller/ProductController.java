@@ -1,8 +1,10 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
+import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,28 +42,32 @@ public class ProductController {
         }
         return ResponseEntity.notFound().build();
     }
-
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+    public ResponseEntity<?> addProduct(@RequestBody Product product) throws DuplicatedValueException{
         try {
             // Obtén el ID de categoría desde la solicitud
             Long categoryId = product.getCategory().getId();
+            Optional<Product> productOptional = productService.getProductByName(product.getName());
 
-            // A continuación, debes buscar la categoría por su ID y configurarla en el producto
-            Category category = categoryService.getCategoryById(categoryId).orElse(null);
+            if(productOptional.isEmpty()) {
+                // A continuación, debes buscar la categoría por su ID y configurarla en el producto
+                Category category = categoryService.getCategoryById(categoryId).orElse(null);
 
-            if (category != null) {
-                product.setCategory(category);
-                // Ahora puedes guardar el producto
-                return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+                if (category != null)  {
+                    product.setCategory(category);
+                    // Ahora puedes guardar el producto
+                    productService.saveProduct(product);
+                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                } else {
+                    return ResponseEntity.notFound().build();
+                }
             } else {
-                return ResponseEntity.notFound().build();
+                throw new DuplicatedValueException("Name exist in Database");
             }
-        } catch (Exception e) {
+        }catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
-
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product){
         Optional<Product> productOptional = productService.updateProduct(id, product);

@@ -80,4 +80,8 @@ public class ProductService implements IProductService{
     public List<Product> getProductByCategory_id(List<Long> category_id) {
         return productRepository.findByCategory_idIn(category_id);
     }
+    @Override
+    public Optional<Product> getProductByName(String name) {
+        return productRepository.findByName(name);
+    }
 }
