@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
@@ -42,10 +43,16 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+    public ResponseEntity<?> addProduct(
+            @RequestParam(value = "file", required = false) MultipartFile file,
+            @RequestBody Product product) {
         try {
-            // No es necesario obtener el ID de categoría
-            // simplemente configura la categoría en el producto
+            // Procesa la imagen si se proporciona
+            if (file != null) {
+                // Maneja el archivo
+            }
+
+            // Continúa con el procesamiento del producto
             return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
