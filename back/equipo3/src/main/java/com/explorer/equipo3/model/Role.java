@@ -21,7 +21,7 @@ public class Role {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", nullable = false)
-    private ERole name;
+    private String name;
     @CreationTimestamp
     @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -31,8 +31,7 @@ public class Role {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
-    public Role(ERole name){
+    public Role(String name) {
         this.name = name;
     }
-
 }

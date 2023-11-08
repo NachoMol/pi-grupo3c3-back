@@ -23,7 +23,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id){
         Optional<User> userSearch = userService.getUserById(id);
         if(userSearch.isPresent()){
@@ -32,7 +32,7 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<?> getUserByEmail(@PathVariable String email){
         Optional<User> userSearch = userService.getUserByEmail(email);
         if(userSearch.isPresent()){
