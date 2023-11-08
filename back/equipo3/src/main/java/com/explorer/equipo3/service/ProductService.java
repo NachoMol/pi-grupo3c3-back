@@ -62,7 +62,10 @@ public class ProductService implements IProductService{
         Product productOptional = null;
         if (productExist.isPresent()){
             Product productDB = productExist.orElseThrow();
-            productDB.setLocation(product.getLocation());
+            productDB.setCity(product.getCity());
+            productDB.setCategory(product.getCategory());
+            productDB.setName(product.getName());
+            productDB.setDetails(product.getDetails());
             productOptional = productRepository.save(productDB);
         }
         return Optional.ofNullable(productOptional);
@@ -73,5 +76,8 @@ public class ProductService implements IProductService{
         productRepository.deleteById(id);
     }
 
-
+    @Override
+    public List<Product> getProductByCategory_id(List<Long> category_id) {
+        return productRepository.findByCategory_idIn(category_id);
+    }
 }

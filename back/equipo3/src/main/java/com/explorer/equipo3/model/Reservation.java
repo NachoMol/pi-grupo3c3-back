@@ -28,8 +28,8 @@ public class Reservation {
     @JoinColumn(name = "product_id")
     private Product product;
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @JoinColumn(name = "city_id")
+    private City city;
 
     public Reservation(Date checkin, Date checkout, Double price) {
         this.checkin = checkin;

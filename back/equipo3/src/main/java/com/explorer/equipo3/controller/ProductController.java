@@ -1,7 +1,9 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
+import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +20,9 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private ICategoryService categoryService;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
@@ -37,8 +42,24 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(@RequestBody Product product){
-        return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+    public ResponseEntity<?> addProduct(@RequestBody Product product) {
+        try {
+            // Obtén el ID de categoría desde la solicitud
+            Long categoryId = product.getCategory().getId();
+
+            // A continuación, debes buscar la categoría por su ID y configurarla en el producto
+            Category category = categoryService.getCategoryById(categoryId).orElse(null);
+
+            if (category != null) {
+                product.setCategory(category);
+                // Ahora puedes guardar el producto
+                return ResponseEntity.status(HttpStatus.CREATED).body(productService.saveProduct(product));
+            } else {
+                return ResponseEntity.notFound().build();
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/update/{id}")
@@ -63,11 +84,19 @@ public class ProductController {
     @PostMapping("/{id}/add-details")
     public ResponseEntity<Product> addDetailsToProduct(
             @PathVariable Long id,
-            @RequestBody Set<Detail> details) {
+            @RequestBody Set<Long> detailIds) {
+        System.out.println("Received detailIds: " + detailIds);
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
             Product product = productOptional.get();
-            product.getDetails().addAll(details); // Agregar los detalles al producto
+
+            // Aquí debes convertir los IDs en objetos Detail y agregarlos al producto
+            for (Long detailId : detailIds) {
+                Detail detail = new Detail();
+                detail.setId(detailId);
+                product.getDetails().add(detail);
+            }
+
             Product updatedProduct = productService.saveProduct(product);
             return ResponseEntity.ok(updatedProduct);
         } else {
@@ -75,19 +104,11 @@ public class ProductController {
         }
     }
 
-    @DeleteMapping("/{id}/remove-details")
-    public ResponseEntity<Product> removeDetailsFromProduct(
-            @PathVariable Long id,
-            @RequestBody Set<Detail> details) {
-        Optional<Product> productOptional = productService.getProductById(id);
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            product.getDetails().removeAll(details); // Eliminar los detalles del producto
-            Product updatedProduct = productService.saveProduct(product);
-            return ResponseEntity.ok(updatedProduct);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    @GetMapping("/byCategories")
+    public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
+
+        return productService.getProductByCategory_id(category_id);
     }
+
 
 }
