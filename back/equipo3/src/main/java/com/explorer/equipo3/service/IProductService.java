@@ -14,4 +14,5 @@ public interface IProductService {
     Optional<Product> updateProduct(Long id, Product product);
     void deleteProductById(Long id);
     List<Product> getProductByCategory_id(List<Long> category_id);
+    Optional<Product> getProductByName(String name);
 }

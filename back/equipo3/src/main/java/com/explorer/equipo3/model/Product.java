@@ -31,6 +31,7 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Image> images;
 
