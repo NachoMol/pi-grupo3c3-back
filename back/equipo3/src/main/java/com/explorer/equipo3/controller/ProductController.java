@@ -110,6 +110,17 @@ public class ProductController {
         }
     }
 
+    @GetMapping("/{id}/get-details")
+    public ResponseEntity<Set<Detail>> getDetailsForProduct(@PathVariable Long id) {
+        Optional<Product> productOptional = productService.getProductById(id);
+        if (productOptional.isPresent()) {
+            Set<Detail> details = productOptional.get().getDetails();
+            return ResponseEntity.ok(details);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @GetMapping("/byCategories")
     public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
 
