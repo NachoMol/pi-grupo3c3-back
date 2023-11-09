@@ -45,7 +45,7 @@ public class RoleController {
         return ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/delete")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteRole(@PathVariable Long id){
         Optional<Role> roleOptional = roleService.getRoleById(id);
         if(roleOptional.isPresent()){

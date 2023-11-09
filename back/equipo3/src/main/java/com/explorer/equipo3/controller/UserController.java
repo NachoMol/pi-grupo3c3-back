@@ -2,6 +2,7 @@ package com.explorer.equipo3.controller;
 
 import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.User;
+import com.explorer.equipo3.model.dto.UserDTO;
 import com.explorer.equipo3.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,20 +20,20 @@ public class UserController {
     private IUserService userService;
 
     @GetMapping()
-    public ResponseEntity<List<User>> getAllUsers(){
+    public ResponseEntity<List<UserDTO>> getAllUsers(){
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/id/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id){
-        Optional<User> userSearch = userService.getUserById(id);
+        Optional<UserDTO> userSearch = userService.getUserById(id);
         if(userSearch.isPresent()){
             return ResponseEntity.ok(userSearch.orElseThrow());
         }
         return ResponseEntity.notFound().build();
     }
 
-    @GetMapping("/{email}")
+    @GetMapping("/email/{email}")
     public ResponseEntity<?> getUserByEmail(@PathVariable String email){
         Optional<User> userSearch = userService.getUserByEmail(email);
         if(userSearch.isPresent()){
@@ -55,7 +56,7 @@ public class UserController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user){
-        Optional<User> userOptional = userService.updateUser(id, user);
+        Optional<UserDTO> userOptional = userService.updateUser(id, user);
         if(userOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
@@ -64,7 +65,7 @@ public class UserController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
-        Optional<User> userOptional = userService.getUserById(id);
+        Optional<UserDTO> userOptional = userService.getUserById(id);
         if(userOptional.isPresent()){
             userService.deleteUserById(id);
             return ResponseEntity.noContent().build();
