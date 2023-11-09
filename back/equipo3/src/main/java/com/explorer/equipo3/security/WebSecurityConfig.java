@@ -48,6 +48,7 @@ public class WebSecurityConfig {
                 .antMatchers("/users/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/categories").permitAll()
                 .antMatchers(HttpMethod.GET,"/products").permitAll()
+                .antMatchers("/products/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/cities").permitAll()
                 .antMatchers(HttpMethod.GET,"/countries").permitAll()
                 .antMatchers(HttpMethod.GET,"/details").permitAll()
