@@ -24,6 +24,6 @@ public class DTOMapperUser {
         if(user == null){
             throw new RuntimeException("Incorrect Params");
         }
-        return new UserDTO(this.user.getId(), this.user.getEmail());
+        return new UserDTO(this.user.getId(), this.user.getName(), this.user.getLastname(), this.user.getEmail());
     }
 }
