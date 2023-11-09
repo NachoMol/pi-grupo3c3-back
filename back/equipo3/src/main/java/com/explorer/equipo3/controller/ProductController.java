@@ -57,7 +57,7 @@ public class ProductController {
                     product.setCategory(category);
                     // Ahora puedes guardar el producto
                     productService.saveProduct(product);
-                    return ResponseEntity.status(HttpStatus.CREATED).build();
+                    return ResponseEntity.status(HttpStatus.CREATED).body(product); // Devuelve el producto creado en la respuesta
                 } else {
                     return ResponseEntity.notFound().build();
                 }
