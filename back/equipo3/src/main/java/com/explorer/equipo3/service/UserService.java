@@ -2,6 +2,8 @@ package com.explorer.equipo3.service;
 
 import com.explorer.equipo3.model.Role;
 import com.explorer.equipo3.model.User;
+import com.explorer.equipo3.model.dto.UserDTO;
+import com.explorer.equipo3.model.dto.mapper.DTOMapperUser;
 import com.explorer.equipo3.repository.IRoleRepository;
 import com.explorer.equipo3.repository.IUserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService implements IUserService {
@@ -25,13 +28,21 @@ public class UserService implements IUserService {
     private PasswordEncoder passwordEncoder;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+
+        return users
+                .stream()
+                .map(u -> DTOMapperUser.builder().setUser(u).build())
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public Optional<UserDTO> getUserById(Long id) {
+        return userRepository.findById(id).map(u -> DTOMapperUser
+                .builder()
+                .setUser(u)
+                .build());
     }
 
     @Override
@@ -40,7 +51,7 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public User saveUser(User user) {
+    public UserDTO saveUser(User user) {
         String passwordEncripted = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncripted);
         Optional<Role> roleOptional = roleRepository.findByName("ROLE_USER");
@@ -49,12 +60,20 @@ public class UserService implements IUserService {
             roles.add(roleOptional.orElseThrow());
         }
         user.setRoles(roles);
-        return userRepository.save(user);
+        return DTOMapperUser.builder().setUser(userRepository.save(user)).build();
     }
 
     @Override
-    public Optional<User> updateUser(Long id, User user) {
-        return Optional.empty();
+    public Optional<UserDTO> updateUser(Long id, User user) {
+        Optional<User> userID = userRepository.findById(id);
+        User userOptional = null;
+        if (userID.isPresent()) {
+            User userDB = userID.orElseThrow();
+            userDB.setEmail(user.getEmail());
+            userOptional = userRepository.save(userDB);
+        }
+
+        return Optional.ofNullable(DTOMapperUser.builder().setUser(userOptional).build());
     }
 
     @Override

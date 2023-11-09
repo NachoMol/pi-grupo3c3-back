@@ -1,5 +1,6 @@
 package com.explorer.equipo3.security.filters;
 
+import com.explorer.equipo3.security.SimpleGrantedAuthorityJsonCreator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -41,7 +42,10 @@ public class JWTValidationFilter extends BasicAuthenticationFilter {
             Claims claims = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody(); //valida el token
             Object authoritiesClaims = claims.get("authorities");
             String username = claims.getSubject(); //obtiene el username
-            Collection<? extends GrantedAuthority> authorities = Arrays.asList(new ObjectMapper().readValue(authoritiesClaims.toString().getBytes(),SimpleGrantedAuthority.class));
+            Collection<? extends GrantedAuthority> authorities = Arrays
+                    .asList(new ObjectMapper()
+                            .addMixIn(SimpleGrantedAuthority.class, SimpleGrantedAuthorityJsonCreator.class)
+                            .readValue(authoritiesClaims.toString().getBytes(),SimpleGrantedAuthority[].class));
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, authorities);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request,response);
