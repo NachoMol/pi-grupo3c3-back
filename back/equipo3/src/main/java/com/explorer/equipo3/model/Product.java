@@ -7,9 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Getter
 @Setter
@@ -35,7 +33,7 @@ public class Product {
     private City city;
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private Set<Image> images;
+    private List<Image> images = new ArrayList<>();
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
     @JsonIgnoreProperties("products") // o @JsonIgnore si no necesitas más información del Detail en el JSON

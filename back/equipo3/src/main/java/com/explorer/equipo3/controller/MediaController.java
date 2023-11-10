@@ -13,6 +13,8 @@ import javax.servlet.Servlet;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -25,16 +27,21 @@ public class MediaController {
     private final HttpServletRequest request;
 
     @PostMapping("upload")
-    public  String uploadFile(@RequestParam("file") MultipartFile multipartFile){
-        String path = storageService.store(multipartFile);
-        String host = request.getRequestURL().toString().replace(request.getRequestURI(),"");
-        String url = ServletUriComponentsBuilder
-                .fromHttpUrl(host)
-                .path("/media/")
-                .path(path)
-                .toUriString();
+    public List<String> uploadFile(@RequestParam("file") List<MultipartFile> multipartFiles){
+        List<String> rutas = new ArrayList<>();
+        for (MultipartFile image: multipartFiles) {
+            String path = storageService.store(image);
+            String host = request.getRequestURL().toString().replace(request.getRequestURI(),"");
+            String url = ServletUriComponentsBuilder
+                    .fromHttpUrl(host)
+                    .path("/media/")
+                    .path(path)
+                    .toUriString();
+            rutas.add(url);
+        }
 
-        return url;
+
+        return rutas;
     }
 
     @GetMapping("{filename:.+}")

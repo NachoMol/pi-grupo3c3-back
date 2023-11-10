@@ -1,6 +1,6 @@
 package com.explorer.equipo3.service;
 
-import com.explorer.equipo3.model.Category;
+
 import com.explorer.equipo3.model.City;
 import com.explorer.equipo3.repository.ICityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
