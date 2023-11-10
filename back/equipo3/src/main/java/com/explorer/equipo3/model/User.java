@@ -1,10 +1,10 @@
 package com.explorer.equipo3.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 @Entity
@@ -22,10 +22,12 @@ public class User {
     private String email;
     @Column(name = "password", nullable = false)
     private String password;
-    @ManyToOne
-    @JoinColumn(name = "role_id")
-    @JsonIgnore
-    private Role role;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id"),
+            uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
+    private List<Role> roles;
 
     public User(String name, String lastname, String email, String password) {
         this.name = name;

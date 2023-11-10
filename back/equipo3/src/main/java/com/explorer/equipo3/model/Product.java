@@ -1,12 +1,14 @@
 package com.explorer.equipo3.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @Getter
@@ -31,12 +33,14 @@ public class Product {
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
+
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Image> images;
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
-    @JsonIgnore
-    private Set<Detail> details;
+    @JsonIgnoreProperties("products") // o @JsonIgnore si no necesitas más información del Detail en el JSON
+    private Set<Detail> details = new HashSet<>();
+
     @CreationTimestamp
     @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
