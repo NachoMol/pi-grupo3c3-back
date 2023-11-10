@@ -46,6 +46,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/users").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/create").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET,"/users/{email}/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users").hasRole("ADMIN")
                 .antMatchers("/users/**").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,"/categories").permitAll()
