@@ -22,6 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+import static com.amazonaws.util.AWSRequestMetrics.Field.Exception;
+
 @Configuration
 public class WebSecurityConfig {
 
@@ -45,7 +47,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST,"/users/create").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users").hasRole("ADMIN")
-                .antMatchers("/users/**").hasRole("ADMIN")
+                .antMatchers("/users/**").hasAnyRole("USER","ADMIN")
                 .antMatchers(HttpMethod.GET,"/categories").permitAll()
                 .antMatchers(HttpMethod.GET,"/products").permitAll()
                 .antMatchers("/products/**").permitAll()
