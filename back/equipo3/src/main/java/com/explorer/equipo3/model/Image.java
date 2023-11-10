@@ -23,9 +23,8 @@ public class Image {
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "url", nullable = false)
+    @JsonIgnore
     private String url;
-    @Column(name = "path", nullable = false)
-    private String imagePath;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -42,6 +41,6 @@ public class Image {
         this.title = title;
         this.url = url;
         this.product = product;
-        this.imagePath = imagePath;
+
     }
 }

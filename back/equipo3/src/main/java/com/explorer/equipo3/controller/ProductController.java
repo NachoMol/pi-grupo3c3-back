@@ -7,6 +7,7 @@ import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IProductService;
+import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,6 +26,8 @@ public class ProductController {
 
     @Autowired
     private ICategoryService categoryService;
+    @Autowired
+    private S3Service s3service;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
@@ -41,7 +44,10 @@ public class ProductController {
             return ResponseEntity.ok(productSearch.orElseThrow());
         }
         return ResponseEntity.notFound().build();
+
+
     }
+
     @PostMapping("/create")
     public ResponseEntity<?> addProduct(@RequestBody Product product) throws DuplicatedValueException{
         try {
@@ -55,6 +61,7 @@ public class ProductController {
 
                 if (category != null)  {
                     product.setCategory(category);
+                    product.setImages(product.getImages());
                     // Ahora puedes guardar el producto
                     productService.saveProduct(product);
                     return ResponseEntity.status(HttpStatus.CREATED).build();

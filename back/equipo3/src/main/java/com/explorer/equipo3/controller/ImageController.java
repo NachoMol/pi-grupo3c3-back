@@ -10,8 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @RestController
@@ -20,6 +24,9 @@ public class ImageController {
 
     @Autowired
     private IImageService imageService;
+
+    @Autowired
+    private MediaController mediaController;
 
     @GetMapping
     public ResponseEntity<List<Image>> getAllImages(){
@@ -36,9 +43,22 @@ public class ImageController {
         return ResponseEntity.notFound().build();
     }
 
+
+
+
     @PostMapping("/upload")
-    public ResponseEntity<?> addImage(@RequestBody Image image){
-        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
+    public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,Image image ){
+        String url = mediaController.uploadFile(file);
+        try {
+            if (!url.isEmpty()){
+                image.setUrl(url);
+                return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
+            }else{
+                return ResponseEntity.notFound().build();
+            }
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PutMapping("/update/{id}")

@@ -25,7 +25,7 @@ public class MediaController {
     private final HttpServletRequest request;
 
     @PostMapping("upload")
-    public Map<String, String> uploadFile(@RequestParam("file") MultipartFile multipartFile){
+    public  String uploadFile(@RequestParam("file") MultipartFile multipartFile){
         String path = storageService.store(multipartFile);
         String host = request.getRequestURL().toString().replace(request.getRequestURI(),"");
         String url = ServletUriComponentsBuilder
@@ -34,7 +34,7 @@ public class MediaController {
                 .path(path)
                 .toUriString();
 
-        return Map.of("url", url);
+        return url;
     }
 
     @GetMapping("{filename:.+}")

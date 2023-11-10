@@ -33,7 +33,6 @@ public class Product {
     private City city;
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Image> images;
-
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
     @JsonIgnore
