@@ -10,7 +10,7 @@ public interface ICityService {
 
         List<City> getAllCities();
         Optional<City> getCityById(Long id);
-        City saveCity(City location);
+        City saveCity(City city);
         Optional<City> updateCity(Long id, City city);
         void deleteCityById(Long id);
         List<City> getCitiesByCountry_id(Long country_id);

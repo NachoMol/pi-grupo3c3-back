@@ -25,7 +25,8 @@ public class Image {
     @Column(name = "url", nullable = false)
     private String url;
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = false)
+    @JoinColumn(name = "product_id", nullable = true)
+    @JsonIgnore
     private Product product;
     @CreationTimestamp
     @JsonIgnore
@@ -36,7 +37,7 @@ public class Image {
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
 
-    public Image(String title, String url,String imagePath, Product product) {
+    public Image(String title, String url, Product product) {
         this.title = title;
         this.url = url;
         this.product = product;

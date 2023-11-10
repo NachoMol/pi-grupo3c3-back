@@ -47,11 +47,11 @@ public class ImageController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<?> addImage(@RequestParam("file") MultipartFile file,Image image ){
-        String url = mediaController.uploadFile(file);
+    public ResponseEntity<?> addImage(@RequestParam("file") List<MultipartFile> files,Image image ){
+        List<String> urls = mediaController.uploadFile(files);
         try {
-            if (!url.isEmpty()){
-                image.setUrl(url);
+            if (!urls.isEmpty()){
+                image.setUrl(String.valueOf(urls));
                 return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
             }else{
                 return ResponseEntity.notFound().build();

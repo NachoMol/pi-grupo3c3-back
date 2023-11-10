@@ -49,11 +49,21 @@ public class WebSecurityConfig {
                 .antMatchers("/categories/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/products").permitAll()
                 .antMatchers("/products/**").permitAll()
+
+                .antMatchers(HttpMethod.GET,"/cities").permitAll()
+                .antMatchers(HttpMethod.GET,"/countries").permitAll()
+                .antMatchers(HttpMethod.GET,"/details").permitAll()
+                .antMatchers("/products/**").permitAll()
+
                 .antMatchers("/cities/**").permitAll()
                 .antMatchers("/countries/**").permitAll()
                 .antMatchers("/details/**").permitAll()
                 .antMatchers("/images/**").permitAll()
+
                 .antMatchers(("/media/**")).permitAll()
+
+                .antMatchers("/media/**").permitAll()
+
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
