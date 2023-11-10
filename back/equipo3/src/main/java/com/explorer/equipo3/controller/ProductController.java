@@ -110,19 +110,6 @@ public class ProductController {
         }
     }
 
-    @GetMapping("/{id}/get-details")
-    public ResponseEntity<Set<Detail>> getDetailsForProduct(@PathVariable Long id) {
-        Optional<Product> productOptional = productService.getProductById(id);
-        if (productOptional.isPresent()) {
-            Product product = productOptional.get();
-            // Forzar la inicialización de la colección antes de cerrar la sesión
-            product.getDetails().size();
-            return ResponseEntity.ok(product.getDetails());
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     @GetMapping("/byCategories")
     public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
 
