@@ -23,7 +23,6 @@ public class Image {
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "url", nullable = false)
-    @JsonIgnore
     private String url;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = false)

@@ -36,6 +36,7 @@ public class Product {
 
     @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
     private Set<Image> images;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
     @JsonIgnoreProperties("products") // o @JsonIgnore si no necesitas más información del Detail en el JSON
