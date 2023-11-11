@@ -22,6 +22,8 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
+import static com.amazonaws.util.AWSRequestMetrics.Field.Exception;
+
 @Configuration
 public class WebSecurityConfig {
 
@@ -44,26 +46,21 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/users").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/create").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
+                .antMatchers(HttpMethod.GET,"/users/{email}/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users").hasRole("ADMIN")
-                .antMatchers("/users/**").hasRole("ADMIN")
-                .antMatchers("/categories/**").permitAll()
+                .antMatchers("/users/**").hasAnyRole("USER","ADMIN")
+                .antMatchers(HttpMethod.GET,"/categories").permitAll()
                 .antMatchers(HttpMethod.GET,"/products").permitAll()
                 .antMatchers("/products/**").permitAll()
-
                 .antMatchers(HttpMethod.GET,"/cities").permitAll()
                 .antMatchers(HttpMethod.GET,"/countries").permitAll()
                 .antMatchers(HttpMethod.GET,"/details").permitAll()
                 .antMatchers("/products/**").permitAll()
-
                 .antMatchers("/cities/**").permitAll()
                 .antMatchers("/countries/**").permitAll()
                 .antMatchers("/details/**").permitAll()
                 .antMatchers("/images/**").permitAll()
-
-                .antMatchers(("/media/**")).permitAll()
-
                 .antMatchers("/media/**").permitAll()
-
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))

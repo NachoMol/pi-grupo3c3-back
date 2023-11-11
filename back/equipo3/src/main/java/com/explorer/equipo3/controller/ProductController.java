@@ -76,10 +76,28 @@ public class ProductController {
         }
     }
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product product){
-        Optional<Product> productOptional = productService.updateProduct(id, product);
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct){
+        Optional<Product> productOptional = productService.getProductById(id);
         if(productOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            Product product = productOptional.get();
+
+            // Actualiza solo los campos necesarios
+            product.setCategory(updatedProduct.getCategory());
+            product.setName(updatedProduct.getName());
+            product.setPrice(updatedProduct.getPrice());
+            // Actualiza otros campos si es necesario
+
+            // Conserva las especificaciones (details) existentes
+            Set<Detail> existingDetails = product.getDetails();
+            if (existingDetails != null && !existingDetails.isEmpty()) {
+                updatedProduct.getDetails().addAll(existingDetails);
+            }
+
+            // Asigna los detalles actualizados al producto
+            product.setDetails(updatedProduct.getDetails());
+
+            Product savedProduct = productService.saveProduct(product);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         }
         return ResponseEntity.notFound().build();
     }
