@@ -3,6 +3,7 @@ package com.explorer.equipo3.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
+import org.hibernate.annotations.BatchSize;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -25,21 +26,22 @@ public class Product {
     private String name;
     @Column(name = "price", nullable = false)
     private Double price;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "category_id")
     private Category category;
     @ManyToOne
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(mappedBy = "product", fetch = FetchType.EAGER)
-    private List<Image> images = new ArrayList<>();
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Image> images;
 
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})
     @JsonIgnoreProperties("products") // o @JsonIgnore si no necesitas más información del Detail en el JSON
-    private Set<Detail> details = new HashSet<>();
+    @BatchSize(size = 10)
+    private Set<Detail> details;
 
     @CreationTimestamp
     @JsonIgnore

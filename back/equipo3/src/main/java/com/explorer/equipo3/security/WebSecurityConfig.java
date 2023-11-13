@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/cities").permitAll()
                 .antMatchers(HttpMethod.GET,"/countries").permitAll()
                 .antMatchers(HttpMethod.GET,"/details").permitAll()
+                .antMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 .antMatchers("/products/**").permitAll()
                 .antMatchers("/cities/**").permitAll()
                 .antMatchers("/countries/**").permitAll()
@@ -65,8 +66,8 @@ public class WebSecurityConfig {
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
                 .addFilter((new JWTValidationFilter(authenticationConfiguration.getAuthenticationManager())))
-                .csrf(config -> config.disable())
                 .sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .csrf(config -> config.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .build();
     }

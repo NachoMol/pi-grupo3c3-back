@@ -1,9 +1,11 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.exception.ResourceNotFoundException;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,11 +19,13 @@ public class ProductService implements IProductService{
     private IProductRepository productRepository;
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
         return productRepository.findAll();
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> getRandomProducts() {
 
         List<Product> allProducts = productRepository.findAll();
@@ -47,16 +51,19 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> getProductById(Long id) {
         return productRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public Product saveProduct(Product product) {
         return productRepository.save(product);
     }
 
     @Override
+    @Transactional
     public Optional<Product> updateProduct(Long id, Product product) {
         Optional<Product> productExist = productRepository.findById(id);
         Product productOptional = null;
@@ -72,15 +79,18 @@ public class ProductService implements IProductService{
     }
 
     @Override
+    @Transactional
     public void deleteProductById(Long id) {
         productRepository.deleteById(id);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<Product> getProductByCategory_id(List<Long> category_id) {
         return productRepository.findByCategory_idIn(category_id);
     }
     @Override
+    @Transactional(readOnly = true)
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name);
     }
