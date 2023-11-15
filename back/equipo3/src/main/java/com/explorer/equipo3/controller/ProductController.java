@@ -142,10 +142,17 @@ public class ProductController {
     }
 
     @GetMapping("/byCategories")
-    public List<Product> getProductByCategory_id(@RequestParam List<Long> category_id) {
+    public ResponseEntity<List<Product>> getProductByCategoryIds(@RequestParam List<Long> category_id) {
+        try{
+            List<Product> products = productService.getProductByCategory_id(category_id);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
-        return productService.getProductByCategory_id(category_id);
-    }
+}
 
 
 }
