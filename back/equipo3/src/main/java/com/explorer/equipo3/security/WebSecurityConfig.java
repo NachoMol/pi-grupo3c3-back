@@ -22,8 +22,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
-import static com.amazonaws.util.AWSRequestMetrics.Field.Exception;
-
 @Configuration
 public class WebSecurityConfig {
 
@@ -64,6 +62,12 @@ public class WebSecurityConfig {
                 .antMatchers("/media/**").permitAll()
                 .antMatchers("/categories/**").permitAll()
                 .anyRequest().authenticated()
+                .and()
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login") // personalizar la url a la que se redirecciona
+                .invalidateHttpSession(true)
+                .deleteCookies("JSESSIONID")
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
                 .addFilter((new JWTValidationFilter(authenticationConfiguration.getAuthenticationManager())))

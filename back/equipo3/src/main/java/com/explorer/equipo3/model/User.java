@@ -1,7 +1,6 @@
 package com.explorer.equipo3.model;
 
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -28,7 +27,6 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
-    @JsonIgnore
     private List<Role> roles;
 
     public User(String name, String lastname, String email, String password) {
