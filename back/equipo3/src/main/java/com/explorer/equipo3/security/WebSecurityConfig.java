@@ -61,6 +61,7 @@ public class WebSecurityConfig {
                 .antMatchers("/countries/**").permitAll()
                 .antMatchers("/details/**").permitAll()
                 .antMatchers("/images/**").permitAll()
+                .antMatchers("/images/{id}").permitAll()
                 .antMatchers("/media/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
