@@ -1,16 +1,22 @@
 package com.explorer.equipo3.service;
 
+
 import com.explorer.equipo3.model.Image;
-import com.explorer.equipo3.model.Product;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Optional;
 
+
 public interface IImageService {
 
     List<Image> getAllImages();
-    Optional<Image> getImageById(Long id);
-    Image saveImage(Image image);
-    Optional<Image> updateImage(Long id, Image image);
-    void deleteImageById(Long id);
+
+    String uploadImage(MultipartFile imageFile, String data) throws Exception;
+
+    Optional<Image> getImageByFilename(String filename);
+
+    Optional<String> getImageUrlById(Long id);
+
+    Optional<byte[]> getImageBytesById(Long id);
 }
