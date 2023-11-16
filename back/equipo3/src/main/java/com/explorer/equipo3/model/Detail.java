@@ -18,7 +18,7 @@ public class Detail {
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "feature", nullable = false)
+    @Column(name = "feature")
     private String feature; // tambien puede ir icono
     @CreationTimestamp
     @JsonIgnore
