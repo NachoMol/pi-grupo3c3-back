@@ -1,21 +1,14 @@
 package com.explorer.equipo3.controller;
 
-import com.amazonaws.services.s3.AmazonS3;
 import com.explorer.equipo3.model.Image;
-import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IImageService;
-import com.explorer.equipo3.service.ImageService;
-import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 @RestController

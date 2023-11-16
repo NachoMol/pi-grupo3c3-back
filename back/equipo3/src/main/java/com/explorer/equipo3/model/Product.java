@@ -33,7 +33,7 @@ public class Product {
     @JoinColumn(name = "city_id")
     private City city;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "product", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images;
 
 

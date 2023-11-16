@@ -26,7 +26,7 @@ public class MediaController {
 
     private final HttpServletRequest request;
 
-    @PostMapping("upload")
+    @PostMapping(value = "/upload", consumes = { "multipart/form-data" })
     public List<String> uploadFile(@RequestParam("file") List<MultipartFile> multipartFiles){
         List<String> rutas = new ArrayList<>();
         for (MultipartFile image: multipartFiles) {

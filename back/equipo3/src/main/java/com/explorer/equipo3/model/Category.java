@@ -24,6 +24,7 @@ public class Category {
     @Column(name = "name", nullable = false)
     private String name;
     @Column(name = "description", nullable = false)
+    @JsonIgnore
     private String description;
     @NotEmpty(message = "image  is mandatory")
     private String image_url;

@@ -20,6 +20,9 @@ public class Image {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Lob
+    @Column(name = "data", nullable = false)
+    private byte[] data;
     @Column(name = "title", nullable = false)
     private String title;
     @Column(name = "url", nullable = false)
