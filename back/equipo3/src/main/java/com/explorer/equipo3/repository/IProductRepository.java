@@ -20,8 +20,11 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
             "LEFT JOIN FETCH p.details")
     List<Product> findAll();
 
-    @Query("SELECT p FROM Product p WHERE p.category.id = :category_ids")
-    List<Product> findByCategory_idIn(List<Long> category_ids);
+
+
+    @Query("SELECT p FROM Product p WHERE p.category.id in :category_id")
+    List<Product> findByCategory_idIn(List<Long> category_id);
+
 
     @Query("SELECT p FROM Product p WHERE p.name LIKE %:name%")
     Optional<Product> findByName(String name);

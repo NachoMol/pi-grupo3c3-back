@@ -3,6 +3,7 @@ package com.explorer.equipo3.controller;
 import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.*;
 import com.explorer.equipo3.service.ICategoryService;
+import com.explorer.equipo3.service.IDetailService;
 import com.explorer.equipo3.service.IProductService;
 import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,9 @@ public class ProductController {
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private IDetailService detailService;
 
     @Autowired
     private ICategoryService categoryService;
@@ -136,9 +140,11 @@ public class ProductController {
 
             // Aquí debes convertir los IDs en objetos Detail y agregarlos al producto
             for (Long detailId : detailIds) {
-                Detail detail = new Detail();
-                detail.setId(detailId);
-                product.getDetails().add(detail);
+                Optional<Detail> detailOptional = detailService.getDetailById(detailId);
+                if (detailOptional.isPresent()) {
+                    Detail detail = detailOptional.get();
+                    product.getDetails().add(detail);
+                }
             }
 
             Product updatedProduct = productService.saveProduct(product);
@@ -158,6 +164,7 @@ public class ProductController {
         }catch (Exception e){
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
+
 
     }
 

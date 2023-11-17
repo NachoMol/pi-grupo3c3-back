@@ -2,6 +2,8 @@ package com.explorer.equipo3.controller;
 
 import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
+import com.explorer.equipo3.model.Product;
+import com.explorer.equipo3.service.DetailService;
 import com.explorer.equipo3.service.IDetailService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/details")
@@ -36,4 +39,21 @@ public class DetailController {
     public ResponseEntity<?> addDetail(@RequestBody Detail detail){
         return ResponseEntity.status(HttpStatus.CREATED).body(detailService.saveDetail(detail));
     }
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateDetail(@PathVariable Long id, @RequestBody Detail updatedDetail){
+        Optional<Detail> detailOptional = detailService.getDetailById(id);
+        if(detailOptional.isPresent()){
+            Detail detail = detailOptional.get();
+
+            // Actualiza solo los campos necesarios
+            detail.setName(updatedDetail.getName());
+            detail.setFeature(updatedDetail.getFeature());
+
+            Detail savedDetail = detailService.saveDetail(detail);
+            return ResponseEntity.status(HttpStatus.CREATED).body(savedDetail);
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
+
