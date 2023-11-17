@@ -63,6 +63,7 @@ public class WebSecurityConfig {
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/media/**").permitAll()
                 .antMatchers("/categories/**").permitAll()
+                .antMatchers("/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
