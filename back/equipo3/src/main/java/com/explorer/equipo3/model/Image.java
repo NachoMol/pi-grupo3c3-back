@@ -24,12 +24,8 @@ public class Image {
     private String filename;
     @Column(name = "url", nullable = false)
     private String url;
-    @Column(name = "data", nullable = false)
-    @JsonIgnore
-    private String data;
     @ManyToOne
     @JoinColumn(name = "product_id", nullable = true)
-    @JsonIgnore
     private Product product;
     @CreationTimestamp
     @JsonIgnore
@@ -43,6 +39,5 @@ public class Image {
     public Image(String filename, String url, String data) {
         this.filename = filename;
         this.url = url;
-        this.data = data;
     }
 }

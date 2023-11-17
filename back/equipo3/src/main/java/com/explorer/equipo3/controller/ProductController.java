@@ -5,6 +5,7 @@ import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.User;
+import com.explorer.equipo3.model.dto.ProductDTO;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IDetailService;
 import com.explorer.equipo3.service.IProductService;
@@ -53,19 +54,22 @@ public class ProductController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addProduct(@RequestBody Product product) throws DuplicatedValueException{
+    public ResponseEntity<?> addProduct(@RequestBody ProductDTO productDTO) throws DuplicatedValueException{
         try {
             // Obtén el ID de categoría desde la solicitud
-            Long categoryId = product.getCategory().getId();
-            Optional<Product> productOptional = productService.getProductByName(product.getName());
+            Long categoryId = productDTO.getProduct().getCategory().getId();
+            Optional<Product> productOptional = productService.getProductByName(productDTO.getProduct().getName());
 
             if(productOptional.isEmpty()) {
                 // A continuación, debes buscar la categoría por su ID y configurarla en el producto
                 Category category = categoryService.getCategoryById(categoryId).orElse(null);
 
                 if (category != null)  {
+                    Product product = productDTO.getProduct();
                     product.setCategory(category);
-                    product.setImages(product.getImages());
+
+                    product.setImages(productDTO.getImages());
+
                     // Ahora puedes guardar el producto
                     productService.saveProduct(product);
                     return ResponseEntity.status(HttpStatus.CREATED).body(product); // Devuelve el producto creado en la respuesta

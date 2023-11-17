@@ -42,7 +42,7 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests()
                 .antMatchers(HttpMethod.GET,"/users").permitAll()
-                .antMatchers(HttpMethod.POST,"/users/create").permitAll()
+                .antMatchers(HttpMethod.POST,"/users/create").hasRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET,"/users/{email}/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users").hasRole("ADMIN")
@@ -62,6 +62,7 @@ public class WebSecurityConfig {
                 .antMatchers("/images/{id}").permitAll()
                 .antMatchers("/media/**").permitAll()
                 .antMatchers("/categories/**").permitAll()
+                .antMatchers("/roles/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .logout()

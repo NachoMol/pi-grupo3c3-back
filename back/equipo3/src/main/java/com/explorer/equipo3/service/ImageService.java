@@ -1,5 +1,6 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.exception.ImageUploadException;
 import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.repository.IImageRepository;
 import org.apache.commons.io.IOUtils;
@@ -97,8 +98,8 @@ public class ImageService implements IImageService{
 
             return "Image uploaded successfully.";
 
-        } catch (Exception e) {
-            throw new Exception(e.getMessage());
+        } catch (ImageUploadException e) {
+            throw new ImageUploadException("Error uploading image");
         }
     }
 

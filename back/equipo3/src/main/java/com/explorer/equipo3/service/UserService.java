@@ -54,10 +54,16 @@ public class UserService implements IUserService {
     public UserDTO saveUser(User user) {
         String passwordEncripted = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncripted);
-        Optional<Role> roleOptional = roleRepository.findByName("ROLE_USER");
+        Optional<Role> userOptional = roleRepository.findByName("ROLE_USER");
         List<Role> roles = new ArrayList<>();
-        if(roleOptional.isPresent()) {
-            roles.add(roleOptional.orElseThrow());
+        if(userOptional.isPresent()) {
+            roles.add(userOptional.orElseThrow());
+        }
+        if(user.isAdmin()){
+            Optional<Role> adminOptional = roleRepository.findByName("ROLE_ADMIN");
+            if(adminOptional.isPresent()){
+                roles.add(adminOptional.orElseThrow());
+            }
         }
         user.setRoles(roles);
         return DTOMapperUser.builder().setUser(userRepository.save(user)).build();
@@ -65,19 +71,32 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<UserDTO> updateUser(Long id, User user) {
-        Optional<User> userID = userRepository.findById(id);
-        User userOptional = null;
-        if (userID.isPresent()) {
-            User userDB = userID.orElseThrow();
+        Optional<User> findUserById = userRepository.findById(id);
+        User userUpdate = null;
+        if (findUserById.isPresent()) {
+            Optional<Role> userOptional = roleRepository.findByName("ROLE_USER");
+            List<Role> roles = new ArrayList<>();
+            if(userOptional.isPresent()) {
+                roles.add(userOptional.orElseThrow());
+            }
+            if(user.isAdmin()){
+                Optional<Role> adminOptional = roleRepository.findByName("ROLE_ADMIN");
+                if(adminOptional.isPresent()){
+                    roles.add(adminOptional.orElseThrow());
+                }
+            }
+            User userDB = findUserById.orElseThrow();
+            userDB.setRoles(roles);
             userDB.setEmail(user.getEmail());
-            userOptional = userRepository.save(userDB);
+            userUpdate = userRepository.save(userDB);
         }
 
-        return Optional.ofNullable(DTOMapperUser.builder().setUser(userOptional).build());
+        return Optional.ofNullable(DTOMapperUser.builder().setUser(userUpdate).build());
     }
 
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteById(id);
     }
+
 }
