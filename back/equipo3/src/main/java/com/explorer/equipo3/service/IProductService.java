@@ -1,13 +1,16 @@
 package com.explorer.equipo3.service;
 
 import com.explorer.equipo3.model.Product;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import java.util.List;
 import java.util.Optional;
 
 public interface IProductService {
 
     List<Product> getAllProducts();
-
+    Page<Product> getAllProductsPage(Pageable pageable);
     List<Product> getRandomProducts();
     Optional<Product> getProductById(Long id);
     Product saveProduct(Product product);

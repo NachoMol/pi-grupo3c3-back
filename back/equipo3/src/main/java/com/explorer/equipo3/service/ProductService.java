@@ -1,9 +1,10 @@
 package com.explorer.equipo3.service;
 
-import com.explorer.equipo3.exception.ResourceNotFoundException;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +22,15 @@ public class ProductService implements IProductService{
     @Override
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
+
         return productRepository.findAll();
+    }
+
+
+
+    @Override
+    public Page<Product> getAllProductsPage(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
