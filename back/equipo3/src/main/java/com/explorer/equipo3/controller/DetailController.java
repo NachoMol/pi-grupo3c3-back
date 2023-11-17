@@ -55,5 +55,15 @@ public class DetailController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteDetail(@PathVariable Long id){
+        Optional detailOptional = detailService.getDetailById(id);
+        if(detailOptional.isPresent()){
+            detailService.deleteDetailById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
 }
 
