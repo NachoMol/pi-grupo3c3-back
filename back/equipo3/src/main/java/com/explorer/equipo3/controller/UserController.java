@@ -3,12 +3,14 @@ package com.explorer.equipo3.controller;
 import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.model.dto.UserDTO;
+import com.explorer.equipo3.service.EmailService;
 import com.explorer.equipo3.service.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +20,9 @@ public class UserController {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping()
     public ResponseEntity<List<UserDTO>> getAllUsers(){
@@ -48,6 +53,7 @@ public class UserController {
         Optional<User> userOptional = userService.getUserByEmail(user.getEmail());
         if (userOptional.isEmpty()) {
             userService.saveUser(user);
+            sentMail(user.getEmail(),user.getName()+" "+user.getLastname());
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             throw new DuplicatedValueException("Email exist in Database");
@@ -72,5 +78,29 @@ public class UserController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/confirmation/{email}")
+    public ResponseEntity<?> sentMail(@PathVariable String email, String name){
+        try {
+            emailService.sendMailConfirmation(email, name);
+            return new ResponseEntity<>("Usuario registrado con éxito. Se ha enviado un correo de confirmación.", HttpStatus.OK);
+        } catch (MessagingException e) {
+            return new ResponseEntity<>("Error al enviar el correo de confirmación.", HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/forwardmail/{email}")
+    public ResponseEntity<?> forwardMail(@PathVariable String email){
+        Optional<User> user = userService.getUserByEmail(email);
+        if (user.isPresent()){
+            sentMail(user.get().getEmail(),user.get().getName()+" "+user.get().getLastname());
+            return new ResponseEntity<>("¡Correo reenviado con exito!.", HttpStatus.OK);
+        }else {
+            return  new ResponseEntity<>("Usuario no Registrado",HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+
 
 }

@@ -1,19 +1,22 @@
 package com.explorer.equipo3.controller;
 
 import com.explorer.equipo3.exception.DuplicatedValueException;
-import com.explorer.equipo3.model.Category;
-import com.explorer.equipo3.model.Detail;
-import com.explorer.equipo3.model.Product;
-import com.explorer.equipo3.model.User;
+import com.explorer.equipo3.model.*;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IDetailService;
 import com.explorer.equipo3.service.IProductService;
 import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -31,11 +34,24 @@ public class ProductController {
     @Autowired
     private ICategoryService categoryService;
     @Autowired
-    private S3Service s3service;
+    private MediaController mediaController;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
+
         return ResponseEntity.ok(productService.getAllProducts());
+    }
+
+    @GetMapping("/pagination")
+    public ResponseEntity<Page<Product>> getPaginatedProducts(Pageable pageable) {
+        Page<Product> products = productService.getAllProductsPage(pageable);
+        return new ResponseEntity<>(products, HttpStatus.OK);
+    }
+
+    @GetMapping("/paginationramdom")
+    public ResponseEntity<Page<Product>> getPaginableRamdom(Pageable pageable){
+        Page<Product> products = productService.getRandomProducts(pageable);
+        return  new ResponseEntity<>(products, HttpStatus.OK);
     }
 
     @GetMapping("/random")
@@ -65,7 +81,7 @@ public class ProductController {
 
                 if (category != null)  {
                     product.setCategory(category);
-                    product.setImages(product.getImages());
+
                     // Ahora puedes guardar el producto
                     productService.saveProduct(product);
                     return ResponseEntity.status(HttpStatus.CREATED).body(product); // Devuelve el producto creado en la respuesta
@@ -79,6 +95,10 @@ public class ProductController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
+
+
+
+
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct){
         Optional<Product> productOptional = productService.getProductById(id);
@@ -152,7 +172,20 @@ public class ProductController {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-}
+    }
+
+    @GetMapping("/byCategoriesPageable")
+    public ResponseEntity<Page<Product>> getProductByCatergoy_idPageable(@RequestParam List<Long> category_id,@PageableDefault(size = 10, page = 0)Pageable pageable) {
+        try{
+            Page<Product> products = productService.getProductByCatergoy_idPageable(category_id,pageable);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+    }
 
 
 }

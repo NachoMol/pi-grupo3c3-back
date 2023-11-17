@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido a Nuestra Aplicación</title>
+</head>
+<body>
+<h1>Bienvenido a Nuestra Aplicación</h1>
+
+<p>Hola [(${nameUser})],</p>
+
+<p>Te damos la bienvenida a nuestra aplicación. Gracias por registrarte. A continuación, encontrarás información de tu cuenta:</p>
+
+<ul>
+    <li><strong>Nombre: </strong> [(${nameUser})]</li>
+    <li><strong>Correo Electrónico: </strong> [(${addressee})]</li>
+
+</ul>
+
+<p>Para comenzar, haz clic en el siguiente enlace para iniciar sesión:</p>
+
+<a href="http://localhost:5173/login">Iniciar Sesión</a>
+
+<p>Gracias y disfruta de nuestra aplicación.</p>
+
+<p>Atentamente,<br>El Equipo de Explorer</p>
+</body>
+</html>

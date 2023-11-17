@@ -1,12 +1,14 @@
 package com.explorer.equipo3.service;
 
-import com.explorer.equipo3.exception.ResourceNotFoundException;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.repository.IProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.util.Collections;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +23,15 @@ public class ProductService implements IProductService{
     @Override
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
+
         return productRepository.findAll();
+    }
+
+
+
+    @Override
+    public Page<Product> getAllProductsPage(Pageable pageable) {
+        return productRepository.findAll(pageable);
     }
 
     @Override
@@ -49,6 +59,20 @@ public class ProductService implements IProductService{
 
         return randomProducts;
     }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<Product> getRandomProducts(Pageable pageable) {
+
+        List<Product> allProducts = productRepository.findAll();
+        Collections.shuffle(allProducts);
+        int start = (int)pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), allProducts.size());
+
+        return new PageImpl<>(allProducts.subList(start, end), pageable, allProducts.size());
+    }
+
+
 
     @Override
     @Transactional(readOnly = true)
@@ -93,5 +117,10 @@ public class ProductService implements IProductService{
     @Transactional(readOnly = true)
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name);
+    }
+
+    @Override
+    public Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable) {
+        return productRepository.findByCategory_idInPageable(category_id,pageable);
     }
 }

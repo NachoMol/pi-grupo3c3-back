@@ -37,21 +37,10 @@ public class ImageController {
     }
 
 
-
-
     @PostMapping("/upload")
-    public ResponseEntity<?> addImage(@RequestParam("file") List<MultipartFile> files,Image image ){
-        List<String> urls = mediaController.uploadFile(files);
-        try {
-            if (!urls.isEmpty()){
-                image.setUrl(String.valueOf(urls));
-                return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
-            }else{
-                return ResponseEntity.notFound().build();
-            }
-        }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-        }
+    public ResponseEntity<?> addImage(@RequestBody Image image ){
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(imageService.saveImage(image));
     }
 
     @PutMapping("/update/{id}")
