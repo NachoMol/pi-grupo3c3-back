@@ -4,6 +4,7 @@ package com.explorer.equipo3.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
@@ -27,12 +28,15 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
-    private List<Role> roles;
+    private List<Role> roles = new ArrayList<>();
+    @Transient
+    private boolean admin;
 
-    public User(String name, String lastname, String email, String password) {
+    public User(String name, String lastname, String email, String password, List<Role> roles) {
         this.name = name;
         this.lastname = lastname;
         this.email = email;
         this.password = password;
+        this.roles = roles;
     }
 }

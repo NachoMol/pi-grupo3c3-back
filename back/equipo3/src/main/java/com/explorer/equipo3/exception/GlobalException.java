@@ -22,4 +22,9 @@ public class GlobalException {
     public ResponseEntity<String> processErrorDuplicatedValue(DuplicatedValueException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(exception.getMessage());
     }
+
+    @ExceptionHandler({ImageUploadException.class})
+    public ResponseEntity<String> processImageUpload(ImageUploadException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body((exception.getMessage()));
+    }
 }
