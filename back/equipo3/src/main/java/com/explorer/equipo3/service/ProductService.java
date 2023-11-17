@@ -103,4 +103,9 @@ public class ProductService implements IProductService{
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name);
     }
+
+    @Override
+    public Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable) {
+        return productRepository.findByCategory_idInPageable(category_id,pageable);
+    }
 }

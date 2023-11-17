@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -165,6 +166,18 @@ public class ProductController {
             return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
+    }
+
+    @GetMapping("/byCategoriesPageable")
+    public ResponseEntity<Page<Product>> getProductByCatergoy_idPageable(@RequestParam List<Long> category_id,@PageableDefault(size = 10, page = 0)Pageable pageable) {
+        try{
+            Page<Product> products = productService.getProductByCatergoy_idPageable(category_id,pageable);
+            return new ResponseEntity<>(products, HttpStatus.OK);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }catch (Exception e){
+            return  new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
 
     }
 

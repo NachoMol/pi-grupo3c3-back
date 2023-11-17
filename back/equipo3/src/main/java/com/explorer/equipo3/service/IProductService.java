@@ -18,4 +18,6 @@ public interface IProductService {
     void deleteProductById(Long id);
     List<Product> getProductByCategory_id(List<Long> category_id);
     Optional<Product> getProductByName(String name);
+
+    Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable);
 }
