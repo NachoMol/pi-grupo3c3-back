@@ -20,4 +20,5 @@ public interface IProductService {
     Optional<Product> getProductByName(String name);
 
     Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable);
+    Page<Product> getRandomProducts(Pageable pageable);
 }
