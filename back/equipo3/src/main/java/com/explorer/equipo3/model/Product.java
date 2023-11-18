@@ -43,6 +43,9 @@ public class Product {
     @BatchSize(size = 10)
     private Set<Detail> details;
 
+    @OneToMany(mappedBy = "product")
+    private Set<Favorites> favorites = new HashSet<>();
+
     @CreationTimestamp
     @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
