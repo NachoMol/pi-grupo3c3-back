@@ -48,7 +48,7 @@ public class DetailController {
 
             // Actualiza solo los campos necesarios
             detail.setName(updatedDetail.getName());
-            detail.setFeature(updatedDetail.getFeature());
+            detail.setImg_url(updatedDetail.getImg_url());
 
             Detail savedDetail = detailService.saveDetail(detail);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedDetail);

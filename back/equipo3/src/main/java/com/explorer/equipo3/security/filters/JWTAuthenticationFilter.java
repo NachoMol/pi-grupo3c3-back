@@ -72,7 +72,6 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
         Collection<? extends GrantedAuthority> roles = authResult.getAuthorities();
         boolean isAdmin = roles.stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
-
         Claims claims = Jwts.claims();
         claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
         claims.put("isAdmin", isAdmin);
@@ -92,6 +91,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         body.put("token", token);
         body.put("message",String.format("HELLO! %s, SIGNIN STARTER SUCCESSFULLY!",email) );
         body.put("username", email);
+        body.put("isAdmin", isAdmin);
         response.getWriter().write(new ObjectMapper().writeValueAsString(body));
         response.setStatus(200);
         response.setContentType("application/json");
