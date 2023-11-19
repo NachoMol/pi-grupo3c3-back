@@ -1,16 +1,19 @@
 package com.explorer.equipo3.controller;
 
+import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.Reservation;
 import com.explorer.equipo3.model.dto.ReservationDTO;
 import com.explorer.equipo3.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,7 +49,7 @@ public class ReservationController {
     }
 
     @GetMapping("/current/{id}")
-    public ResponseEntity<List<Reservation>> getAllCurrentByProduct(Long id) {
+    public ResponseEntity<List<Reservation>> getAllCurrentByProduct(@PathVariable Long id) {
         List<Reservation> reservation = reservationService.getReservatiosByProductscurrent(id);
         return ResponseEntity.ok(reservation);
     }
@@ -59,6 +62,18 @@ public class ReservationController {
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/availableproducts")
+    public ResponseEntity<Page<Product>> findAvailableProducts(
+            @RequestParam(required = false) String productName,
+            @RequestParam(required = false) List<Long> categoryIds,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date checkin,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date checkout,
+            Pageable pageable) {
+        Page<Product> availableProducts =
+                reservationService.getProductsearch(productName, categoryIds, checkin, checkout, pageable);
+        return new ResponseEntity<>(availableProducts, HttpStatus.OK);
     }
 
 }

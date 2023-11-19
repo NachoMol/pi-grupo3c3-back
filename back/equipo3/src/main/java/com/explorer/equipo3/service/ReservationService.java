@@ -6,7 +6,6 @@ import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.Reservation;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.model.dto.ReservationDTO;
-import com.explorer.equipo3.model.dto.UserDTO;
 import com.explorer.equipo3.repository.IReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,10 +109,18 @@ public class ReservationService implements IReservationService{
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public List<Reservation> getReservatiosByProductscurrent(Long id) {
         return iReservationRepository.findCurrentReservationsByProductId(id);
     }
+
+    @Override
+    @Transactional
+    public Page<Product> getProductsearch(String productName, List<Long> categoryIds, Date checkin, Date checkout, Pageable pageable) {
+        return iReservationRepository.findAvailableProducts(productName,categoryIds,checkin,checkout,pageable);
+    }
+
+
 
 
 }

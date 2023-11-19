@@ -35,6 +35,8 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    private List<Reservation> reservations;
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
