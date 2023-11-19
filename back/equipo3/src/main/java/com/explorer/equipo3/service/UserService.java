@@ -38,6 +38,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public Optional<User> getUserID(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public Optional<UserDTO> getUserById(Long id) {
         return userRepository.findById(id).map(u -> DTOMapperUser
                 .builder()

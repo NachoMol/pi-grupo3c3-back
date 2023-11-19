@@ -66,6 +66,7 @@ public class WebSecurityConfig {
                 .antMatchers("/categories/**").permitAll()
                 .antMatchers("/users/**").permitAll()
                 .antMatchers("/roles/**").permitAll()
+                .antMatchers("/reservations/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))

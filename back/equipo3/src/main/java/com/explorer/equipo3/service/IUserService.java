@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface IUserService {
 
     List<UserDTO> getAllUsers();
+    Optional<User> getUserID(Long id);
     Optional<UserDTO> getUserById(Long id);
     UserDTO saveUser(User user);
     Optional<UserDTO> updateUser(Long id, User user);
