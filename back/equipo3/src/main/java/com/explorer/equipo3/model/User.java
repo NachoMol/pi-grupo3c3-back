@@ -39,4 +39,14 @@ public class User {
         this.password = password;
         this.roles = roles;
     }
+
+    // Agrega el rol a la lista
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    // Elimina el rol de la lista
+    public void removeRole(Role role) {
+        this.roles.remove(role);
+    }
 }
