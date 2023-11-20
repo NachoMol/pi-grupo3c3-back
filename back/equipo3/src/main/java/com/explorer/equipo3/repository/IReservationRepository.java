@@ -26,18 +26,19 @@ public interface IReservationRepository extends JpaRepository<Reservation,Long> 
     List<Reservation> findCurrentReservationsByProductId(Long productId);
 
 
-    @Query(("SELECT DISTINCT p FROM Product p " +
+    @Query("SELECT DISTINCT p FROM Product p " +
             "LEFT JOIN p.reservations r " +
+            "LEFT JOIN p.category c " +
             "WHERE (:productName IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
-            "AND (:category_id IS NULL OR p.category.id IN :category_id) " +
+            "AND (:categoryIds IS NULL OR c.id IN :categoryIds) " +
             "AND (r.id IS NULL OR (:checkin IS NULL AND :checkout IS NULL) OR NOT EXISTS (" +
             "   SELECT 1 FROM Reservation r2 " +
             "   WHERE r2.product = p " +
             "   AND (:checkin IS NOT NULL AND r2.checkout >= :checkin) " +
-            "   AND (:checkout IS NOT NULL AND r2.checkin <= :checkout)))"))
+            "   AND (:checkout IS NOT NULL AND r2.checkin <= :checkout)))")
     Page<Product> findAvailableProducts(
             String productName,
-            List<Long> category_id,
+            List<Long> categoryIds,
             Date checkin,
             Date checkout,
             Pageable pageable
