@@ -5,7 +5,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 @Entity
@@ -29,8 +31,12 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "role_id"),
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
     private List<Role> roles = new ArrayList<>();
+
     @Transient
     private boolean isAdmin;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Favorites> favorites = new HashSet<>();
 
     public User(String name, String lastname, String email, String password, List<Role> roles) {
         this.name = name;
@@ -38,5 +44,15 @@ public class User {
         this.email = email;
         this.password = password;
         this.roles = roles;
+    }
+
+    // Agrega el rol a la lista
+    public void addRole(Role role) {
+        this.roles.add(role);
+    }
+
+    // Elimina el rol de la lista
+    public void removeRole(Role role) {
+        this.roles.remove(role);
     }
 }

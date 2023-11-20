@@ -1,12 +1,15 @@
 package com.explorer.equipo3.model;
 
+import com.explorer.equipo3.validations.ValidateReservationDates;
 import lombok.*;
-
 import javax.persistence.*;
+import javax.validation.constraints.Future;
+import javax.validation.constraints.FutureOrPresent;
 import java.util.Date;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
 @Entity
+@ValidateReservationDates
 @Table(name = "reservations")
 public class Reservation {
 
@@ -14,10 +17,12 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Temporal(TemporalType.DATE)
+    @FutureOrPresent
     @Column(name = "checkin", nullable = false)
     private Date checkin;
     @Temporal(TemporalType.DATE)
     @Column(name = "checkout", nullable = false)
+    @Future
     private Date checkout;
     @Column(name = "price", nullable = false)
     private Double price;

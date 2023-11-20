@@ -1,27 +1,19 @@
 package com.explorer.equipo3.controller;
-
 import com.explorer.equipo3.exception.DuplicatedValueException;
-import com.explorer.equipo3.model.*;
 import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
 import com.explorer.equipo3.model.Product;
-import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.model.dto.ProductDTO;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IDetailService;
 import com.explorer.equipo3.service.IProductService;
-import com.explorer.equipo3.service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -192,6 +184,7 @@ public class ProductController {
         }
 
     }
+
 
 
 }

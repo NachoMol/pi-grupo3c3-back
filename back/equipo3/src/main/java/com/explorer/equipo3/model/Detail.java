@@ -18,12 +18,15 @@ public class Detail {
     private Long id;
     @Column(name = "name", nullable = false)
     private String name;
-    @Column(name = "feature")
-    private String feature; // tambien puede ir icono
+
+    @Column(name = "img_url")
+    private String img_url;
+
     @CreationTimestamp
     @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date created_at;
+
     @UpdateTimestamp
     @JsonIgnore
     @Column(name = "updated_at", nullable = false)
@@ -31,6 +34,6 @@ public class Detail {
 
     public Detail(String name, String feature) {
         this.name = name;
-        this.feature = feature;
+        this.img_url = img_url;
     }
 }

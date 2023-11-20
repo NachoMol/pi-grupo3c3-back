@@ -123,4 +123,5 @@ public class ProductService implements IProductService{
     public Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable) {
         return productRepository.findByCategory_idInPageable(category_id,pageable);
     }
+
 }

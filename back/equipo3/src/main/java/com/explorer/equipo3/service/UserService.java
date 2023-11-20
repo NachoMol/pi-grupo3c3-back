@@ -38,6 +38,11 @@ public class UserService implements IUserService {
     }
 
     @Override
+    public Optional<User> getUserID(Long id) {
+        return userRepository.findById(id);
+    }
+
+    @Override
     public Optional<UserDTO> getUserById(Long id) {
         return userRepository.findById(id).map(u -> DTOMapperUser
                 .builder()
@@ -54,18 +59,29 @@ public class UserService implements IUserService {
     public UserDTO saveUser(User user) {
         String passwordEncripted = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncripted);
-        Optional<Role> userOptional = roleRepository.findByName("ROLE_USER");
-        List<Role> roles = new ArrayList<>();
-        if(userOptional.isPresent()) {
-            roles.add(userOptional.orElseThrow());
+
+        // Obtener roles existentes del usuario
+        List<Role> userRoles = user.getRoles();
+
+        // Buscar el rol "ROLE_USER" y agregarlo si no existe
+        Optional<Role> userRoleOptional = roleRepository.findByName("ROLE_USER");
+        Role userRole = userRoleOptional.orElseThrow();
+        if (!userRoles.contains(userRole)) {
+            userRoles.add(userRole);
         }
-        if(user.isAdmin()){
-            Optional<Role> adminOptional = roleRepository.findByName("ROLE_ADMIN");
-            if(adminOptional.isPresent()){
-                roles.add(adminOptional.orElseThrow());
+
+        // Buscar el rol "ROLE_ADMIN" y agregarlo si el usuario es admin
+        if (user.isAdmin()) {
+            Optional<Role> adminRoleOptional = roleRepository.findByName("ROLE_ADMIN");
+            Role adminRole = adminRoleOptional.orElseThrow();
+            if (!userRoles.contains(adminRole)) {
+                userRoles.add(adminRole);
             }
         }
-        user.setRoles(roles);
+
+        // Actualizar roles del usuario
+        user.setRoles(userRoles);
+
         return DTOMapperUser.builder().setUser(userRepository.save(user)).build();
     }
 
@@ -73,21 +89,28 @@ public class UserService implements IUserService {
     public Optional<UserDTO> updateUser(Long id, User user) {
         Optional<User> findUserById = userRepository.findById(id);
         User userUpdate = null;
+
         if (findUserById.isPresent()) {
-            Optional<Role> userOptional = roleRepository.findByName("ROLE_USER");
-            List<Role> roles = new ArrayList<>();
-            if(userOptional.isPresent()) {
-                roles.add(userOptional.orElseThrow());
+            User userDB = findUserById.get();
+
+            // Limpiar roles existentes
+            userDB.getRoles().clear();
+
+            // Agregar ROLE_USER si no es admin
+            if (!user.isAdmin()) {
+                Optional<Role> userRoleOptional = roleRepository.findByName("ROLE_USER");
+                userRoleOptional.ifPresent(userDB::addRole);
             }
-            if(user.isAdmin()){
-                Optional<Role> adminOptional = roleRepository.findByName("ROLE_ADMIN");
-                if(adminOptional.isPresent()){
-                    roles.add(adminOptional.orElseThrow());
-                }
+
+            // Agregar ROLE_ADMIN si es admin
+            if (user.isAdmin()) {
+                Optional<Role> adminRoleOptional = roleRepository.findByName("ROLE_ADMIN");
+                adminRoleOptional.ifPresent(userDB::addRole);
             }
-            User userDB = findUserById.orElseThrow();
-            userDB.setRoles(roles);
+
+            // Actualizar otros detalles del usuario
             userDB.setEmail(user.getEmail());
+
             userUpdate = userRepository.save(userDB);
         }
 

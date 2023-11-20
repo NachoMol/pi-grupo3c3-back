@@ -35,6 +35,9 @@ public class Product {
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
     private List<Image> images;
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Reservation> reservations;
 
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -42,6 +45,9 @@ public class Product {
     @JsonIgnoreProperties("products") // o @JsonIgnore si no necesitas más información del Detail en el JSON
     @BatchSize(size = 10)
     private Set<Detail> details;
+
+    @OneToMany(mappedBy = "product")
+    private Set<Favorites> favorites = new HashSet<>();
 
     @CreationTimestamp
     @JsonIgnore
