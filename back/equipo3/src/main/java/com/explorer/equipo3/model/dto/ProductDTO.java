@@ -15,4 +15,5 @@ public class ProductDTO {
 
     private Product product;
     private List<Image> images;
+
 }
