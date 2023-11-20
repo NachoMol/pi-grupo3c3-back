@@ -14,7 +14,7 @@ import java.util.Optional;
 @Repository
 public interface IProductRepository extends JpaRepository<Product, Long> {
 
-    @Query("SELECT p FROM Product p " +
+    @Query("SELECT distinct p FROM Product p " +
             "LEFT JOIN FETCH p.category " +
             "LEFT JOIN FETCH p.city " +
             "LEFT JOIN FETCH p.images " +
