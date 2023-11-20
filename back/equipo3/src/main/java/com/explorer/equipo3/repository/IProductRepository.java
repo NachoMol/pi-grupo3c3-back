@@ -23,6 +23,7 @@ public interface IProductRepository extends JpaRepository<Product, Long> {
 
 
 
+
     @Query("SELECT p FROM Product p WHERE p.category.id in :category_id")
     List<Product> findByCategory_idIn(List<Long> category_id);
 

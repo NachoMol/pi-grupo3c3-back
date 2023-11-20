@@ -45,6 +45,7 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.OK);
     }
 
+
     @GetMapping("/paginationramdom")
     public ResponseEntity<Page<Product>> getPaginableRamdom(Pageable pageable){
         Page<Product> products = productService.getRandomProducts(pageable);
