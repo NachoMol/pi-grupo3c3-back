@@ -30,7 +30,7 @@ public class User {
             uniqueConstraints = {@UniqueConstraint(columnNames = {"user_id","role_id"})})
     private List<Role> roles = new ArrayList<>();
     @Transient
-    private boolean admin;
+    private boolean isAdmin;
 
     public User(String name, String lastname, String email, String password, List<Role> roles) {
         this.name = name;
