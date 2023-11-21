@@ -2,10 +2,13 @@ package com.explorer.equipo3.controller;
 import com.explorer.equipo3.exception.DuplicatedValueException;
 import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Detail;
+import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.model.Product;
-import com.explorer.equipo3.model.dto.ProductDTO;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IDetailService;
+import com.explorer.equipo3.service.IImageService;
 import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -14,9 +17,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.*;
 
 @RestController
 @RequestMapping("/products")
@@ -30,6 +34,9 @@ public class ProductController {
 
     @Autowired
     private ICategoryService categoryService;
+
+    @Autowired
+    private IImageService imageService;
     @Autowired
     private MediaController mediaController;
 
@@ -65,6 +72,69 @@ public class ProductController {
 
 
     }
+
+    @PostMapping("/add")
+    public ResponseEntity<?> add(@RequestParam("files") List<MultipartFile> files,
+                                 @RequestParam("product") String productJson) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            Product product = objectMapper.readValue(productJson, Product.class);
+
+            List<String> imageUploadResults = Collections.singletonList(imageService.uploadImages(files, "Image data"));
+
+            if (imageUploadResults.contains("Error uploading image.")) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+            // Asocia las imágenes al producto
+            List<Image> images = new ArrayList<>();
+            for (MultipartFile multipartFile : files) {
+                Image image = new Image();
+
+                try {
+                    // Obtén los datos binarios de la imagen en forma de byte array
+                    byte[] imageData = multipartFile.getBytes();
+
+                    // Asigna los datos binarios al atributo 'data'
+                    image.setData(imageData);
+
+                    // Obtén el nombre del archivo y asígnalo al atributo 'filename'
+                    String filename = multipartFile.getOriginalFilename();
+                    image.setFilename(filename);
+
+                    String title = filename.substring(0, filename.lastIndexOf('.'));
+                    image.setTitle(title);
+
+                    String imageUrl = "http://localhost:8080/images/" + filename;
+                    image.setUrl(imageUrl);
+
+                    image.setProduct(product);
+
+                    images.add(image);
+                } catch (IOException e) {
+                    e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
+            }
+                product.setImages(images);
+
+                // Guarda el producto con las imágenes asociadas
+                productService.saveProduct(product);
+
+                return ResponseEntity.status(HttpStatus.CREATED).body(product);
+            } catch(JsonProcessingException e){
+                e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error parsing JSON");
+            }catch(DuplicatedValueException e){
+                e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicated value");
+            } catch(Exception e){
+                e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            }
+
+    }
+
 
     @PostMapping("/create")
     public ResponseEntity<?> addProduct(@RequestBody Product product) throws DuplicatedValueException{
