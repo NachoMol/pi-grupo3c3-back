@@ -69,6 +69,16 @@ public class UserController {
         return ResponseEntity.notFound().build();
     }
 
+    @PutMapping("/updateAdmin/{id}")
+    public ResponseEntity<?> updateAdminStatus(@PathVariable Long id, @RequestParam Boolean makeAdmin) {
+        try {
+            userService.updateAdminStatus(id, makeAdmin);
+            return ResponseEntity.status(HttpStatus.OK).build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating admin status");
+        }
+    }
+
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id){
         Optional<UserDTO> userOptional = userService.getUserById(id);
