@@ -37,8 +37,6 @@ public class ProductController {
 
     @Autowired
     private IImageService imageService;
-    @Autowired
-    private MediaController mediaController;
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){

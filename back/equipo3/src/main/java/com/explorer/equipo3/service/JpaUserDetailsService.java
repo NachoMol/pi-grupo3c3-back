@@ -36,7 +36,10 @@ public class JpaUserDetailsService implements UserDetailsService {
                 .stream()
                 .map(role -> new SimpleGrantedAuthority((role.getName())))
                 .collect(Collectors.toList());
-        
+
+        boolean isAdmin = authorities.stream().anyMatch(role -> role.getAuthority().equals("ROLE_ADMIN"));
+        System.out.println("isAdmin in JpaUserDetails: " + isAdmin);
+
         return new User(user.getEmail(),
                 user.getPassword(),
                 true,

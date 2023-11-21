@@ -42,7 +42,12 @@ public class UserController {
     public ResponseEntity<?> getUserByEmail(@PathVariable String email){
         Optional<User> userSearch = userService.getUserByEmail(email);
         if(userSearch.isPresent()){
-            return ResponseEntity.ok(userSearch.orElseThrow());
+            User user = userSearch.orElseThrow();
+            boolean isAdmin = user.getRoles().stream()
+                    .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+            user.setAdmin(isAdmin);
+            System.out.println("isAdmin: " + isAdmin);
+            return ResponseEntity.ok(user);
         } else {
             return ResponseEntity.notFound().build();
         }
