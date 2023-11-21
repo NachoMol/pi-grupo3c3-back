@@ -1,6 +1,8 @@
 package com.explorer.equipo3.controller;
 import com.explorer.equipo3.model.Image;
+import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IImageService;
+import com.explorer.equipo3.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +21,9 @@ public class ImageController {
 
     @Autowired
     private IImageService imageService;
+
+    @Autowired
+    private IProductService productService;
 
 
     @GetMapping("/list")
@@ -48,8 +54,23 @@ public class ImageController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(MultipartFile file, String data) throws Exception{
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String data) throws Exception{
         return ResponseEntity.ok(imageService.uploadImage(file, data));
+    }
+
+    @PostMapping("/uploads")
+    public ResponseEntity<String> uploadImages(@RequestParam("files") List<MultipartFile> files, String data) throws Exception{
+        List<String> uploadResults = new ArrayList<>();
+        for (MultipartFile file : files) {
+            try {
+                String result = imageService.uploadImage(file, data);
+                uploadResults.add(result);
+            } catch (Exception e) {
+                e.printStackTrace();
+                uploadResults.add(e.getMessage());
+            }
+        }
+        return ResponseEntity.ok(uploadResults.toString());
     }
 
 }

@@ -22,6 +22,7 @@ public class Image {
     private Long id;
     @Lob
     @Column(name = "data", nullable = false)
+    @JsonIgnore
     private byte[] data;
     @Column(name = "title", nullable = false)
     private String title;
@@ -30,7 +31,8 @@ public class Image {
     @Column(name = "url", nullable = false)
     private String url;
     @ManyToOne
-    @JoinColumn(name = "product_id", nullable = true)
+    @JoinColumn(name = "product_id", nullable = false)
+    @JsonIgnore
     private Product product;
     @CreationTimestamp
     @JsonIgnore

@@ -19,4 +19,6 @@ public interface IImageService {
     Optional<String> getImageUrlById(Long id);
 
     Optional<byte[]> getImageBytesById(Long id);
+
+    String uploadImages(List<MultipartFile> imageFiles, String data) throws Exception;
 }
