@@ -30,7 +30,7 @@ public interface IReservationRepository extends JpaRepository<Reservation,Long> 
             "LEFT JOIN p.reservations r " +
             "LEFT JOIN p.category c " +
             "WHERE (:productName IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
-            "AND (:categoryIds IS NULL OR c.id IN :categoryIds) " +
+            "AND (coalesce(:categoryIds) IS NULL OR c.id IN (:categoryIds)) " +
             "AND (r.id IS NULL OR (:checkin IS NULL AND :checkout IS NULL) OR NOT EXISTS (" +
             "   SELECT 1 FROM Reservation r2 " +
             "   WHERE r2.product = p " +
