@@ -116,7 +116,8 @@ public class UserService implements IUserService {
             }
 
             // Actualizar otros detalles del usuario
-            userDB.setEmail(user.getEmail());
+            if(user.getEmail() != null){
+            userDB.setEmail(user.getEmail());}
 
             userUpdate = userRepository.save(userDB);
         }

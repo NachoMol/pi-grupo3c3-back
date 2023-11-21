@@ -43,7 +43,9 @@ public class WebSecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.authorizeHttpRequests()
+                .antMatchers("/users/**").permitAll()
                 .antMatchers(HttpMethod.GET,"/users").permitAll()
+                .antMatchers(HttpMethod.PUT,"/users/update/{id}").permitAll()
                 .antMatchers(HttpMethod.POST,"/users/create").permitAll()
                 .antMatchers(HttpMethod.GET,"/users/{id}").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.GET,"/users/{email}/**").hasAnyRole("USER", "ADMIN")
@@ -63,7 +65,6 @@ public class WebSecurityConfig {
                 .antMatchers("/images/**").permitAll()
                 .antMatchers("/media/**").permitAll()
                 .antMatchers("/categories/**").permitAll()
-                .antMatchers("/users/**").permitAll()
                 .antMatchers("/roles/**").permitAll()
                 .antMatchers("/reservations/**").permitAll()
                 .anyRequest().authenticated()
