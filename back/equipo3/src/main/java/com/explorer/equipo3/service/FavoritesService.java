@@ -25,7 +25,7 @@ public class FavoritesService implements IFavoritesService{
     ProductService productService;
 
     @Override
-    public List<Favorites> findFavoritesByUserID(Long userId) {
+    public List<FavoritesDTO> findFavoritesByUserID(Long userId) {
         return favoritesRepository.findFavoritesByUserID(userId);
     }
 
@@ -46,7 +46,7 @@ public class FavoritesService implements IFavoritesService{
 
     @Override
     public void deleteFavoriteById(Long id) {
-
+        favoritesRepository.deleteById(id);
     }
 
 }

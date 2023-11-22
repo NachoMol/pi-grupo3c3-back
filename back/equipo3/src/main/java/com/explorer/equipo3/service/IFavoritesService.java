@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public interface IFavoritesService {
 
-    List<Favorites> findFavoritesByUserID(Long id);
+    List<FavoritesDTO> findFavoritesByUserID(Long id);
 
     Optional<Favorites> findFavoriteById(Long id);
 

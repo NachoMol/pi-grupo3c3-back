@@ -20,7 +20,7 @@ public class FavoritesController {
     private IFavoritesService favoritesService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<List<Favorites>> getFavoritesByUserId(@PathVariable Long id){
+    public ResponseEntity<List<FavoritesDTO>> getFavoritesByUserId(@PathVariable Long id){
         return ResponseEntity.ok(favoritesService.findFavoritesByUserID(id));
     }
 
@@ -29,11 +29,11 @@ public class FavoritesController {
         return ResponseEntity.status(HttpStatus.CREATED).body(favoritesService.saveFavorites(favoritesDTO));
     }
 
-    @DeleteMapping("/delete")
-    public ResponseEntity<String> deleteFavorite(@RequestBody Favorites favorite){
-        Optional favoriteOptional = favoritesService.findFavoriteById(favorite.getId());
+    @DeleteMapping("/delete/{id}")
+    public ResponseEntity<String> deleteFavorite(@PathVariable Long id){
+        Optional favoriteOptional = favoritesService.findFavoriteById(id);
         if(favoriteOptional.isPresent()){
-            favoritesService.deleteFavoriteById(favorite.getId());
+            favoritesService.deleteFavoriteById(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
