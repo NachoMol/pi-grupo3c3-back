@@ -47,6 +47,7 @@ public class Product {
     private Set<Detail> details;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private Set<Favorites> favorites = new HashSet<>();
 
     @CreationTimestamp

@@ -1,6 +1,7 @@
 package com.explorer.equipo3.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -36,6 +37,7 @@ public class User {
     private boolean isAdmin;
 
     @OneToMany(mappedBy = "user")
+    @JsonIgnore
     private Set<Favorites> favorites = new HashSet<>();
 
     public User(String name, String lastname, String email, String password, List<Role> roles) {
