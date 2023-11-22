@@ -2,6 +2,7 @@ package com.explorer.equipo3.controller;
 
 
 import com.explorer.equipo3.model.Favorites;
+import com.explorer.equipo3.model.dto.FavoritesDTO;
 import com.explorer.equipo3.service.IFavoritesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +25,8 @@ public class FavoritesController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<?> addFavorite(@RequestBody Favorites favorite){
-        return ResponseEntity.status(HttpStatus.CREATED).body(favoritesService.saveFavorites(favorite));
+    public ResponseEntity<?> addFavorite(@RequestBody FavoritesDTO favoritesDTO){
+        return ResponseEntity.status(HttpStatus.CREATED).body(favoritesService.saveFavorites(favoritesDTO));
     }
 
     @DeleteMapping("/delete")
