@@ -51,6 +51,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.GET,"/users/{email}/**").hasAnyRole("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST,"/users").hasRole("ADMIN")
                 .antMatchers("/users/**").hasAnyRole("USER","ADMIN")
+
                 .antMatchers(HttpMethod.GET,"/categories").permitAll()
                 .antMatchers(HttpMethod.GET,"/products").permitAll()
                 .antMatchers("/products/**").permitAll()
@@ -67,7 +68,7 @@ public class WebSecurityConfig {
                 .antMatchers("/categories/**").permitAll()
                 .antMatchers("/roles/**").permitAll()
                 .antMatchers("/reservations/**").permitAll()
-                .antMatchers("favorites/**").permitAll()
+                .antMatchers("/favorites/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))
