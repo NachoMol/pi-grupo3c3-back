@@ -37,7 +37,7 @@ public class ImageController {
         Optional<String> imageUrl = imageService.getImageUrlById(id);
 
         return imageUrl.map(url -> new ResponseEntity<>(url, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/id/{id}")
@@ -49,7 +49,7 @@ public class ImageController {
             headers.setContentType(MediaType.IMAGE_JPEG); // Ajusta según el tipo de archivo
 
             return new ResponseEntity<>(bytes, headers, HttpStatus.OK);
-        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        }).orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
 

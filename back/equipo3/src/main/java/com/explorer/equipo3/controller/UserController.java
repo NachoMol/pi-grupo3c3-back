@@ -69,7 +69,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody User user){
         Optional<UserDTO> userOptional = userService.updateUser(id, user);
         if(userOptional.isPresent()){
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+            return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.notFound().build();
     }

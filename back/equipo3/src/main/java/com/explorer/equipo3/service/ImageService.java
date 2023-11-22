@@ -67,7 +67,7 @@ public class ImageService implements IImageService{
     @Override
     public String uploadImage(MultipartFile imageFile, String data) throws Exception {
         try {
-            String filename = UUID.randomUUID().toString();
+            String filename = imageFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
             byte[] bytes = imageFile.getBytes();
             String fileOriginalName = imageFile.getOriginalFilename();
 
@@ -83,7 +83,7 @@ public class ImageService implements IImageService{
             }
 
             String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
-            String newFilename = filename + fileExtension;
+            String newFilename = filename.endsWith(fileExtension) ? filename : filename + fileExtension;
 
             Path folderPath = Paths.get("src/main/resources/static/images");
             Files.createDirectories(folderPath);
@@ -117,7 +117,7 @@ public class ImageService implements IImageService{
 
         for (MultipartFile imageFile : imageFiles) {
             try {
-                String filename = UUID.randomUUID().toString();
+                String filename = imageFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
                 byte[] bytes = imageFile.getBytes();
                 String fileOriginalName = imageFile.getOriginalFilename();
 
@@ -135,7 +135,8 @@ public class ImageService implements IImageService{
                 }
 
                 String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
-                String newFilename = filename + fileExtension;
+                String newFilename = filename.endsWith(fileExtension) ? filename : filename + fileExtension;
+
 
                 Path folderPath = Paths.get("src/main/resources/static/images");
                 Files.createDirectories(folderPath);
