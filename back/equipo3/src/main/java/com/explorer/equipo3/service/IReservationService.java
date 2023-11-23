@@ -16,11 +16,11 @@ public interface IReservationService {
 
 
     Page<Reservation> getAllReservations(Pageable pageable);
-
+    Page<Reservation> getAllReservationsByUser(Long idUser,Pageable pageable);
     Optional<Reservation> getReservationById(Long id);
     Reservation saveReservation(ReservationDTO reservationDTO);
     Optional<Reservation> updateReservation(Long id, Reservation reservation);
-    void deleteReservationById(Long id);
+    String deleteReservationById(Long id);
 
     List<Reservation>getReservatiosByProductscurrent(Long id);
     Page<Product> getProductsearch(String productName, List<Long> categoryIds, Date checkin, Date checkout, Pageable pageable);

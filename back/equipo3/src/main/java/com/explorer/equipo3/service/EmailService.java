@@ -9,6 +9,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.Date;
 
 @Service
 public class EmailService {
@@ -34,4 +35,45 @@ public class EmailService {
 
         javaMailSender.send(mimeMessage);
     }
+
+    public void sendMailConfirmationReservation(String email, String nameUser, String nameProduct,Date checkin, Date checkout)throws MessagingException{
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Confirmación de Registro");
+
+        Context context = new Context();
+        context.setVariable("nameUser",nameUser);
+        context.setVariable("nameProduct",nameProduct);
+        context.setVariable("checkin",checkin);
+        context.setVariable("checkout",checkout);
+        String contentMail = templateEngine.process("ConfirmationReserva", context);
+
+        mimeMessageHelper.setText(contentMail,true);
+
+        javaMailSender.send(mimeMessage);
+    }
+
+    public void reSendMailConfirmationReservation(String email, String nameUser, String nameProduct,Date checkin, Date checkout)throws MessagingException{
+        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+
+        MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
+
+        mimeMessageHelper.setTo(email);
+        mimeMessageHelper.setSubject("Confirmación de Registro");
+
+        Context context = new Context();
+        context.setVariable("nameUser",nameUser);
+        context.setVariable("nameProduct",nameProduct);
+        context.setVariable("checkin",checkin);
+        context.setVariable("checkout",checkout);
+        String contentMail = templateEngine.process("ConfirmationReservationUpdate", context);
+
+        mimeMessageHelper.setText(contentMail,true);
+
+        javaMailSender.send(mimeMessage);
+    }
+
 }

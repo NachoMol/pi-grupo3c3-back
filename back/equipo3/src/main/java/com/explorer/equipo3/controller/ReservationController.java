@@ -3,6 +3,7 @@ package com.explorer.equipo3.controller;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.model.Reservation;
 import com.explorer.equipo3.model.dto.ReservationDTO;
+import com.explorer.equipo3.service.IReservationService;
 import com.explorer.equipo3.service.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,7 +23,7 @@ import java.util.Optional;
 public class ReservationController {
 
     @Autowired
-    private ReservationService reservationService;
+    private IReservationService reservationService;
 
     @PostMapping("/create")
     public ResponseEntity<?> saveReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws RuntimeException {
@@ -74,6 +75,23 @@ public class ReservationController {
         Page<Product> availableProducts =
                 reservationService.getProductsearch(productName, categoryIds, checkin, checkout, pageable);
         return new ResponseEntity<>(availableProducts, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/availablereservations-user/{id}")
+    public ResponseEntity<Page<Reservation>> findAvailableReservationsByUser(@PathVariable(name = "id", required = true) Long idUser,Pageable pageable) {
+        Page<Reservation> availableProducts = reservationService.getAllReservationsByUser(idUser, pageable);
+        return new ResponseEntity<>(availableProducts, HttpStatus.OK);
+    }
+
+    @PutMapping("/cancel/{id}")
+    public ResponseEntity<?> cancelReservation (@PathVariable Long id){
+        try {
+            ;
+            return  ResponseEntity.ok(reservationService.deleteReservationById(id));
+        } catch (RuntimeException e) {
+            return ResponseEntity.notFound().build();
+        }
     }
 
 }

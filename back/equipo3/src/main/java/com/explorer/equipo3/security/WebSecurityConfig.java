@@ -70,6 +70,7 @@ public class WebSecurityConfig {
                 .antMatchers("/reservations/**").permitAll()
                 .antMatchers("/favorites/**").permitAll()
                 .antMatchers("/policies/**").permitAll()
+                .antMatchers("/users/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))

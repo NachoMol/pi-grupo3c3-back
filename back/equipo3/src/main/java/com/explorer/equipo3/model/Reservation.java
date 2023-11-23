@@ -26,6 +26,8 @@ public class Reservation {
     private Date checkout;
     @Column(name = "price", nullable = false)
     private Double price;
+    @Column(name = "state")
+    private Boolean state = true ;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
