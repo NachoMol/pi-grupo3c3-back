@@ -36,6 +36,7 @@ public class PolicyService implements IPolicyService{
         Policy policyResponse = null;
         if(policyOptional.isPresent()){
             Policy policyDB = policyOptional.orElseThrow();
+            policyDB.setTitle(policy.getTitle());
             policyDB.setDescription(policy.getDescription());
             policyResponse = policyRepository.save(policyDB);
         }
