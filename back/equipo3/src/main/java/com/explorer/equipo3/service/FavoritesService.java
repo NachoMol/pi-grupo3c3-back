@@ -9,6 +9,7 @@ import com.explorer.equipo3.repository.IFavoritesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Optional;
@@ -25,16 +26,19 @@ public class FavoritesService implements IFavoritesService{
     ProductService productService;
 
     @Override
+    @Transactional
     public List<FavoritesDTO> findFavoritesByUserID(Long userId) {
         return favoritesRepository.findFavoritesByUserID(userId);
     }
 
     @Override
+    @Transactional
     public Optional<Favorites> findFavoriteById(Long id) {
-        return Optional.empty();
+        return favoritesRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public Favorites saveFavorites(@Valid FavoritesDTO favoritesDTO) {
         Favorites favorites = new Favorites();
         Optional<Product> product = productService.getProductById(favoritesDTO.getProduct_id());
@@ -45,6 +49,7 @@ public class FavoritesService implements IFavoritesService{
     }
 
     @Override
+    @Transactional
     public void deleteFavoriteById(Long id) {
         favoritesRepository.deleteById(id);
     }

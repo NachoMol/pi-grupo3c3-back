@@ -31,13 +31,14 @@ public class FavoritesController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteFavorite(@PathVariable Long id){
+        System.out.println("id: " + id);
         Optional favoriteOptional = favoritesService.findFavoriteById(id);
+        System.out.println("favoriteOptional: + " + favoriteOptional);
         if(favoriteOptional.isPresent()){
+            System.out.println("Ingreso al IF");
             favoritesService.deleteFavoriteById(id);
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.notFound().build();
     }
-
-
 }
