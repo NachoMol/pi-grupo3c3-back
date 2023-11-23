@@ -39,6 +39,9 @@ public class Product {
     @JsonIgnore
     private List<Reservation> reservations;
 
+    @OneToMany(mappedBy = "product")
+    private List<Policy> policies;
+
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinTable(name = "product_detail", joinColumns = { @JoinColumn(name = "product_id")}, inverseJoinColumns = {@JoinColumn(name = "detail_id")})

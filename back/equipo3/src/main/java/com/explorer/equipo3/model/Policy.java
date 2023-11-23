@@ -1,5 +1,6 @@
 package com.explorer.equipo3.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,10 +25,16 @@ public class Policy {
     private String title;
     @Column(name = "description")
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "product_id")
+    @JsonIgnore
+    private Product product;
     @CreationTimestamp
+    @JsonIgnore
     @Column(name = "created_at", nullable = false, updatable = false)
     private Date created_at;
     @CreationTimestamp
+    @JsonIgnore
     @Column(name = "updated_at")
     private Date updated_at;
 }
