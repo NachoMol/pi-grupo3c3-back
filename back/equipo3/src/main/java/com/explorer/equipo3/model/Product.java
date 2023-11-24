@@ -61,6 +61,8 @@ public class Product {
     @JsonIgnore
     @Column(name = "updated_at", nullable = false)
     private Date updated_at;
+    @Column(name = "state")
+    private Boolean state ;
 
 
     public Product(String name, Double price, Category category, City city) {
@@ -68,5 +70,6 @@ public class Product {
         this.price = price;
         this.category = category;
         this.city = city;
+        this.state = true;
     }
 }

@@ -14,10 +14,10 @@ public interface IProductService {
     Optional<Product> getProductById(Long id);
     Product saveProduct(Product product);
     Optional<Product> updateProduct(Long id, Product product);
-    void deleteProductById(Long id);
+    String deleteProductById(Long id);
     List<Product> getProductByCategory_id(List<Long> category_id);
     Optional<Product> getProductByName(String name);
     Page<Product> getProductByCatergoy_idPageable(List<Long> category_id, Pageable pageable);
-    Page<Product> getRandomProducts(Pageable pageable);
+
 
 }

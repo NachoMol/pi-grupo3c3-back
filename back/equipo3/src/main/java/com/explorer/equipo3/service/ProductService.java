@@ -23,22 +23,24 @@ public class ProductService implements IProductService{
     @Override
     @Transactional(readOnly = true)
     public List<Product> getAllProducts() {
-
-        return productRepository.findAll();
+        Pageable pageable =null;
+        Page<Product>products = productRepository.findAll2(pageable);
+        return products.getContent();
     }
 
 
 
     @Override
     public Page<Product> getAllProductsPage(Pageable pageable) {
-        return productRepository.findAll(pageable);
+        return productRepository.findAll2(pageable);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Product> getRandomProducts() {
-
-        List<Product> allProducts = productRepository.findAll();
+        Pageable pageable = null;
+        Page<Product> products = productRepository.findAll2(pageable);
+        List<Product> allProducts =products.getContent();
         int totalProducts = allProducts.size();
 
         if (totalProducts <= 10) {
@@ -59,19 +61,6 @@ public class ProductService implements IProductService{
 
         return randomProducts;
     }
-
-    @Override
-    @Transactional(readOnly = true)
-    public Page<Product> getRandomProducts(Pageable pageable) {
-
-        List<Product> allProducts = productRepository.findAll();
-        Collections.shuffle(allProducts);
-        int start = (int)pageable.getOffset();
-        int end = Math.min((start + pageable.getPageSize()), allProducts.size());
-
-        return new PageImpl<>(allProducts.subList(start, end), pageable, allProducts.size());
-    }
-
 
 
     @Override
@@ -104,8 +93,15 @@ public class ProductService implements IProductService{
 
     @Override
     @Transactional
-    public void deleteProductById(Long id) {
-        productRepository.deleteById(id);
+    public String deleteProductById(Long id) {
+
+        int updatedRows = productRepository.cancelProduct(id);
+        if (updatedRows > 0) {
+            return "Producto anulado";
+        } else {
+            return "No se pudo anular el producto";
+        }
+
     }
 
     @Override
