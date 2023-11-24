@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Data
@@ -12,8 +13,8 @@ import java.util.Date;
 public class ReservationDTO {
 
     private Long id;
-    private Date checkin;
-    private Date checkout;
+    private LocalDate checkin;
+    private LocalDate checkout;
     private Double price;
     private Long user_id;
     private Long product_id;

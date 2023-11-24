@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.mail.MessagingException;
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -92,7 +93,7 @@ public class ReservationService implements IReservationService{
 
     }
 
-    public ResponseEntity<?> sentMail(String email, String nameUser,String nameProduct, Date checkin, Date checkout){
+    public ResponseEntity<?> sentMail(String email, String nameUser,String nameProduct, LocalDate checkin, LocalDate checkout){
         try {
             emailService.sendMailConfirmationReservation(email, nameUser, nameProduct, checkin, checkout);
             return new ResponseEntity<>("Correo de confirmación de Reservación enviado.", HttpStatus.OK);
@@ -101,7 +102,7 @@ public class ReservationService implements IReservationService{
         }
     }
 
-    public ResponseEntity<?> reSentMail(String email, String nameUser,String nameProduct, Date checkin, Date checkout){
+    public ResponseEntity<?> reSentMail(String email, String nameUser,String nameProduct, LocalDate checkin, LocalDate checkout){
         try {
             emailService.reSendMailConfirmationReservation(email, nameUser, nameProduct, checkin, checkout);
             return new ResponseEntity<>("Correo de confirmación de Reservación enviado.", HttpStatus.OK);
@@ -142,18 +143,26 @@ public class ReservationService implements IReservationService{
     @Override
     @Transactional
     public String deleteReservationById(Long id) {
-        Optional<Reservation> reservation = getReservationById(id);
-            Date current = new Date();
-           // if (reservation != null){
-               // if (reservation.get().getCheckin().after(current) && reservation.get().getCheckin().equals(current)){
-                //    return" No se puede cancelar la reserva";
-
-               // }else {
-                 //   iReservationRepository.cancelReservation(id);
-                   // return "Reserva anulada";
-           // }
-           // }
-        return "Reserva no encontrada";
+        try {
+         Optional<Reservation> reservation = getReservationById(id);
+            LocalDate current = LocalDate.now();
+            if (reservation.isPresent()) {
+                if (reservation.get().getCheckin().isBefore(current) || reservation.get().getCheckin().isEqual(current)) {
+                    return "No se puede cancelar la reserva";
+                } else {
+                    int updatedRows = iReservationRepository.cancelReservation(id);
+                    if (updatedRows > 0) {
+                        return "Reserva anulada";
+                    } else {
+                        return "No se pudo anular la reserva";
+                    }
+                }
+            }
+            return "Reserva no encontrada";
+        } catch (Exception e) {
+            // Manejar la excepción según tus necesidades
+            return "Error al cancelar la reserva: " + e.getMessage();
+        }
     }
 
     @Override
@@ -164,7 +173,7 @@ public class ReservationService implements IReservationService{
 
     @Override
     @Transactional
-    public Page<Product> getProductsearch(String productName, List<Long> categoryIds, Date checkin, Date checkout, Pageable pageable) {
+    public Page<Product> getProductsearch(String productName, List<Long> categoryIds, LocalDate checkin, LocalDate checkout, Pageable pageable) {
         return iReservationRepository.findAvailableProducts(productName,categoryIds,checkin,checkout,pageable);
     }
 

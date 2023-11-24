@@ -9,6 +9,7 @@ import org.thymeleaf.spring5.SpringTemplateEngine;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Service
@@ -36,7 +37,7 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
     }
 
-    public void sendMailConfirmationReservation(String email, String nameUser, String nameProduct,Date checkin, Date checkout)throws MessagingException{
+    public void sendMailConfirmationReservation(String email, String nameUser, String nameProduct,LocalDate checkin, LocalDate checkout)throws MessagingException{
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
@@ -56,7 +57,7 @@ public class EmailService {
         javaMailSender.send(mimeMessage);
     }
 
-    public void reSendMailConfirmationReservation(String email, String nameUser, String nameProduct,Date checkin, Date checkout)throws MessagingException{
+    public void reSendMailConfirmationReservation(String email, String nameUser, String nameProduct, LocalDate checkin, LocalDate checkout)throws MessagingException{
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
 
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");

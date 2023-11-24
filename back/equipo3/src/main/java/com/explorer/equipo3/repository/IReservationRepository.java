@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -24,7 +26,7 @@ public interface IReservationRepository extends JpaRepository<Reservation,Long> 
             "AND ((r.checkin BETWEEN :checkin AND :checkout) OR " +
             "(r.checkout BETWEEN :checkin AND :checkout))" +
             "And r.state = true")
-    List<Reservation> findByProductIdAndCheckinAndCheckout(Long productoId,Date checkin, Date checkout);
+    List<Reservation> findByProductIdAndCheckinAndCheckout(Long productoId,LocalDate checkin, LocalDate checkout);
 
     //state es el estado de la reservación si está false está cancelada, si está en true está activa
     @Query("SELECT r FROM Reservation r JOIN r.product p WHERE p.id = :productId AND r.checkout >= CURRENT_DATE AND r.state = true")
@@ -39,24 +41,24 @@ public interface IReservationRepository extends JpaRepository<Reservation,Long> 
             "LEFT JOIN p.reservations r " +
             "LEFT JOIN p.category c " +
             "WHERE (:productName IS NULL OR LOWER(p.name) LIKE LOWER(CONCAT('%', :productName, '%'))) " +
-            "AND (coalesce(:categoryIds) IS NULL OR c.id IN (:categoryIds)) " +
-            "AND  r.state = true "+
+            "AND (COALESCE(:categoryIds) IS NULL OR c.id IN (:categoryIds)) " +
+            "AND  (r.state = true OR r.id IS NULL)"+
             "AND (r.id IS NULL OR (:checkin IS NULL AND :checkout IS NULL) OR NOT EXISTS (" +
             "   SELECT 1 FROM Reservation r2 " +
             "   WHERE r2.product = p " +
             "   AND (:checkin IS NOT NULL AND r2.checkout >= :checkin) " +
             "   AND (:checkout IS NOT NULL AND r2.checkin <= :checkout)))")
     Page<Product> findAvailableProducts(
-            String productName,
-            List<Long> categoryIds,
-            Date checkin,
-            Date checkout,
+            @Param("productName") String productName,
+            @Param("categoryIds") List<Long> categoryIds,
+            @Param("checkin") LocalDate checkin,
+            @Param("checkout") LocalDate checkout,
             Pageable pageable
     );
 
     @Transactional
     @Modifying
     @Query("UPDATE Reservation r SET r.state = false WHERE r.id = :idReservation")
-    Reservation cancelReservation(@Param("idReservation") Long idReservation);
+    int cancelReservation(@Param("idReservation") Long idReservation);
 
 }

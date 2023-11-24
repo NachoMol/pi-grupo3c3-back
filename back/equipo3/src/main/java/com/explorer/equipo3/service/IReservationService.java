@@ -6,6 +6,7 @@ import com.explorer.equipo3.model.dto.ReservationDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -23,6 +24,6 @@ public interface IReservationService {
     String deleteReservationById(Long id);
 
     List<Reservation>getReservatiosByProductscurrent(Long id);
-    Page<Product> getProductsearch(String productName, List<Long> categoryIds, Date checkin, Date checkout, Pageable pageable);
+    Page<Product> getProductsearch(String productName, List<Long> categoryIds, LocalDate checkin, LocalDate checkout, Pageable pageable);
 
 }

@@ -5,6 +5,7 @@ import com.explorer.equipo3.model.Reservation;
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class DatesReservationValidator implements ConstraintValidator<ValidateReservationDates, Reservation> {
@@ -18,14 +19,14 @@ public class DatesReservationValidator implements ConstraintValidator<ValidateRe
         if (reservation == null){
             return true;
         }
-        Date currenDate = new Date();
+        LocalDate currenDate = LocalDate.now();
         //Validar que la fecha de inicio sea igual a la actual o mayor
-        if (reservation.getCheckin() != null && reservation.getCheckin().before(currenDate)){
+        if (reservation.getCheckin() != null && reservation.getCheckin().isAfter(currenDate)){
             return false;
         }
         // Validar que la fecha de fin sea mayor que la fecha de inicio
         if (reservation.getCheckin() != null && reservation.getCheckout() != null &&
-                reservation.getCheckout().before(reservation.getCheckin())) {
+                reservation.getCheckout().isBefore(reservation.getCheckin())) {
             return false;
         }
 

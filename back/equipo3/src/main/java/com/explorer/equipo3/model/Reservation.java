@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.*;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.FutureOrPresent;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @ToString
@@ -16,18 +17,18 @@ public class Reservation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Temporal(TemporalType.DATE)
+
     @FutureOrPresent
-    @Column(name = "checkin", nullable = false)
-    private Date checkin;
-    @Temporal(TemporalType.DATE)
-    @Column(name = "checkout", nullable = false)
+    @Column(columnDefinition = "DATE", name = "checkin", nullable = false)
+    private LocalDate checkin;
+
+    @Column(columnDefinition = "DATE",name = "checkout", nullable = false)
     @Future
-    private Date checkout;
+    private LocalDate checkout;
     @Column(name = "price", nullable = false)
     private Double price;
     @Column(name = "state")
-    private Boolean state = true ;
+    private Boolean state ;
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
@@ -38,9 +39,12 @@ public class Reservation {
     @JoinColumn(name = "city_id")
     private City city;
 
-    public Reservation(Date checkin, Date checkout, Double price) {
+    public Reservation(LocalDate checkin, LocalDate checkout, Double price) {
         this.checkin = checkin;
         this.checkout = checkout;
         this.price = price;
+        this.state = true;
     }
+
+
 }

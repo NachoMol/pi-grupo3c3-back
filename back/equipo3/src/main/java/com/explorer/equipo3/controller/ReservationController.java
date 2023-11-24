@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -69,8 +70,8 @@ public class ReservationController {
     public ResponseEntity<Page<Product>> findAvailableProducts(
             @RequestParam(required = false) String productName,
             @RequestParam(required = false) List<Long> categoryIds,
-            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date checkin,
-            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") Date checkout,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkin,
+            @RequestParam(required = false)@DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate checkout,
             Pageable pageable) {
         Page<Product> availableProducts =
                 reservationService.getProductsearch(productName, categoryIds, checkin, checkout, pageable);
@@ -87,7 +88,7 @@ public class ReservationController {
     @PutMapping("/cancel/{id}")
     public ResponseEntity<?> cancelReservation (@PathVariable Long id){
         try {
-            ;
+
             return  ResponseEntity.ok(reservationService.deleteReservationById(id));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
