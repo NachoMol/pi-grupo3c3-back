@@ -94,6 +94,10 @@ public class UserService implements IUserService {
 
     @Override
     public Optional<UserDTO> updateUser(Long id, User user) {
+
+        System.out.println("Received request to update user with ID: " + id);
+        System.out.println("User isAdmin: " + user.isAdmin());
+
         Optional<User> findUserById = userRepository.findById(id);
         User userUpdate = null;
 
@@ -121,7 +125,8 @@ public class UserService implements IUserService {
 
             userUpdate = userRepository.save(userDB);
         }
-
+        System.out.println("Updated user with ID: " + userUpdate.getId());
+        System.out.println("User isAdmin: " + user.isAdmin());
         return Optional.ofNullable(DTOMapperUser.builder().setUser(userUpdate).build());
     }
 
