@@ -54,19 +54,19 @@ public class ImageController {
 
 
     @PostMapping("/upload")
-    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file, String data) throws Exception{
-        return ResponseEntity.ok(imageService.uploadImage(file, data));
+    public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
+        return ResponseEntity.ok(imageService.uploadImage(file));
     }
 
     @PostMapping("/uploads")
-    public ResponseEntity<String> uploadImages(@RequestParam("files") List<MultipartFile> files, String data) throws Exception{
+    public ResponseEntity<String> uploadImages(@RequestParam("files") List<MultipartFile> files) throws Exception{
         List<String> uploadResults = new ArrayList<>();
         for (MultipartFile file : files) {
             try {
-                String result = imageService.uploadImage(file, data);
+                String result = imageService.uploadImage(file);
                 uploadResults.add(result);
             } catch (Exception e) {
-                e.printStackTrace();
+                e.getMessage();
                 uploadResults.add(e.getMessage());
             }
         }

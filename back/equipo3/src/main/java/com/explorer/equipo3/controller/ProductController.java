@@ -18,9 +18,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/products")
@@ -65,6 +67,33 @@ public class ProductController {
 
     }
 
+    @GetMapping("/{productId}/images")
+    public ResponseEntity<?> getProductImages(@PathVariable Long productId) {
+        try {
+            Optional<Product> optionalProduct = productService.getProductById(productId);
+
+            if (optionalProduct.isPresent()) {
+                Product product = optionalProduct.get();
+
+                // Obtener las imágenes relacionadas con el producto desde el servicio de imágenes
+                List<Image> productImages = imageService.getImagesByProduct(product);
+
+                // Aquí puedes devolver las imágenes o simplemente las URL de las imágenes, según tus necesidades
+                List<String> imageUrls = productImages.stream()
+                        .map(Image::getUrl)
+                        .distinct()
+                        .collect(Collectors.toList());
+                System.out.println("Image URLs: " + imageUrls);
+                return ResponseEntity.ok(imageUrls);
+            } else {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestParam("files") List<MultipartFile> files,
                                  @RequestParam("product") String productJson) {
@@ -72,7 +101,9 @@ public class ProductController {
             ObjectMapper objectMapper = new ObjectMapper();
             Product product = objectMapper.readValue(productJson, Product.class);
 
-            List<String> imageUploadResults = Collections.singletonList(imageService.uploadImages(files, "Image data"));
+            String imageUploadResult = imageService.uploadImages(files);
+
+            List<String> imageUploadResults = Collections.singletonList(imageService.uploadImages(files));
 
             if (imageUploadResults.contains("Error uploading image.")) {
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
@@ -84,26 +115,19 @@ public class ProductController {
                 Image image = new Image();
 
                 try {
-                    // Obtén los datos binarios de la imagen en forma de byte array
-                    byte[] imageData = multipartFile.getBytes();
-
-                    // Asigna los datos binarios al atributo 'data'
-                    image.setData(imageData);
 
                     // Obtén el nombre del archivo y asígnalo al atributo 'filename'
                     String filename = multipartFile.getOriginalFilename();
                     image.setFilename(filename);
 
-                    String title = filename.substring(0, filename.lastIndexOf('.'));
-                    image.setTitle(title);
-
-                    String imageUrl = "http://localhost:8080/images/" + filename;
+                    String imageUrl = "https://s3.amazonaws.com/bucket-explorer-images/" + filename;
                     image.setUrl(imageUrl);
 
                     image.setProduct(product);
 
                     images.add(image);
-                } catch (IOException e) {
+
+                } catch (S3Exception e) {
                     e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
@@ -115,10 +139,10 @@ public class ProductController {
 
                 return ResponseEntity.status(HttpStatus.CREATED).body(product);
             } catch(JsonProcessingException e){
-                e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                e.getMessage(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error parsing JSON");
             }catch(DuplicatedValueException e){
-                e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
+                e.getMessage(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades
                 return ResponseEntity.status(HttpStatus.CONFLICT).body("Duplicated value");
             } catch(Exception e){
                 e.printStackTrace(); // Manejo adecuado de la excepción, puedes personalizar según tus necesidades

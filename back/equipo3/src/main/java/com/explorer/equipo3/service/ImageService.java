@@ -2,11 +2,13 @@ package com.explorer.equipo3.service;
 
 import com.explorer.equipo3.exception.ImageUploadException;
 import com.explorer.equipo3.model.Image;
+import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.repository.IImageRepository;
 import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,7 +19,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class ImageService implements IImageService{
@@ -27,6 +28,9 @@ public class ImageService implements IImageService{
 
     @Autowired
     private IProductService productService;
+
+    @Autowired
+    private IS3Service s3Service;
 
 
     @Override
@@ -58,6 +62,20 @@ public class ImageService implements IImageService{
         });
     }
 
+    @Override
+    public List<Image> getImagesByProduct(Product product) {
+        List<Image> localImages = imageRepository.findByProduct(product);
+        List<Image> s3Images = s3Service.getImagesByProduct(product); // Necesitas implementar este método en tu servicio de S3
+
+        // Combina las imágenes locales con las imágenes de S3
+        List<Image> allImages = new ArrayList<>();
+        allImages.addAll(localImages);
+        allImages.addAll(s3Images);
+
+        return allImages;
+    }
+
+
 
     @Override
     public Optional<Image> getImageByFilename(String filename) {
@@ -65,10 +83,9 @@ public class ImageService implements IImageService{
     }
 
     @Override
-    public String uploadImage(MultipartFile imageFile, String data) throws Exception {
+    public String uploadImage(MultipartFile imageFile) throws Exception {
         try {
             String filename = imageFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
-            byte[] bytes = imageFile.getBytes();
             String fileOriginalName = imageFile.getOriginalFilename();
 
             long fileSize = imageFile.getSize();
@@ -78,48 +95,51 @@ public class ImageService implements IImageService{
                 return "File size too large. Max size is 10MB.";
             }
 
-            if(!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".jpeg") && !fileOriginalName.endsWith(".png")) {
-                return "File type not supported. Only JPG, JPEG and PNG files are allowed.";
+            if (!fileOriginalName.endsWith(".jpg") && !fileOriginalName.endsWith(".jpeg") && !fileOriginalName.endsWith(".png")) {
+                return "File type not supported. Only JPG, JPEG, and PNG files are allowed.";
             }
 
             String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
             String newFilename = filename.endsWith(fileExtension) ? filename : filename + fileExtension;
 
-            Path folderPath = Paths.get("src/main/resources/static/images");
-            Files.createDirectories(folderPath);
-
-            // Modificación para incluir la URL completa
-            String imageUrl = "http://localhost:8080/images/" + newFilename;
+            // Modificación para incluir la URL completa de S3
+            String imageUrl = "https://s3.amazonaws.com/bucket-explorer-images/" + newFilename;
             System.out.println(imageUrl);
 
-
-            // Guardar información en la base de datos
-            Image image = new Image();// Asigna los bytes de la imagen al campo 'data'
+            /*// Guardar información en la base de datos
+            Image image = new Image();
             image.setFilename(newFilename);
             image.setUrl(imageUrl);
-            image.setTitle(data);
-            image.setData(bytes);
-            imageRepository.save(image);
+            imageRepository.save(image);*/
 
-            Path filePath = folderPath.resolve(newFilename);
-            Files.write(filePath, bytes);
+            // Subir la imagen al bucket de S3
+            String uploadResult = s3Service.uploadFile(imageFile);
 
-            return "Image uploaded successfully.";
-
+            // Guardar información en la base de datos solo si la subida a S3 es exitosa
+            if ("Image uploaded successfully".equals(uploadResult)) {
+                Image image = new Image();
+                image.setFilename(newFilename);
+                image.setUrl(imageUrl);
+                imageRepository.save(image);
+                return "Image uploaded successfully.";
+            } else {
+                return "Error uploading image.";
+            }
         } catch (ImageUploadException e) {
             throw new ImageUploadException("Error uploading image");
         }
     }
 
+
     @Override
-    public String uploadImages(List<MultipartFile> imageFiles, String data) throws Exception {
+    public String uploadImages(List<MultipartFile> imageFiles) throws Exception {
         List<String> uploadResults = new ArrayList<>();
 
         for (MultipartFile imageFile : imageFiles) {
             try {
                 String filename = imageFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
-                byte[] bytes = imageFile.getBytes();
                 String fileOriginalName = imageFile.getOriginalFilename();
+                String uploadResult = s3Service.uploadFile(imageFile);
 
                 long fileSize = imageFile.getSize();
                 long maxSize = 10485760; // 10MB
@@ -137,26 +157,30 @@ public class ImageService implements IImageService{
                 String fileExtension = fileOriginalName.substring(fileOriginalName.lastIndexOf("."));
                 String newFilename = filename.endsWith(fileExtension) ? filename : filename + fileExtension;
 
+                // Modificación para incluir la URL completa desde S3
+                String imageUrl = "https://s3.amazonaws.com/bucket-explorer-images/" + newFilename;
 
-                Path folderPath = Paths.get("src/main/resources/static/images");
-                Files.createDirectories(folderPath);
-
-                // Modificación para incluir la URL completa
-                String imageUrl = "http://localhost:8080/images/" + newFilename;
-
-                // Guardar información en la base de datos
+                /*// Guardar información en la base de datos
                 Image image = new Image();
                 image.setFilename(newFilename);
                 image.setUrl(imageUrl);
-                image.setTitle(data);
-                image.setData(bytes);
                 imageRepository.save(image);
 
-                Path filePath = folderPath.resolve(newFilename);
-                Files.write(filePath, bytes);
+                uploadResults.add("Image uploaded successfully: " + uploadResult);*/
 
-                uploadResults.add("Image uploaded successfully: " + imageUrl);
-            } catch (IOException | ImageUploadException e) {
+                // Guardar información en la base de datos solo si la subida a S3 es exitosa
+                if ("Image uploaded successfully".equals(uploadResult)) {
+                    Image image = new Image();
+                    image.setFilename(newFilename);
+                    image.setUrl(imageUrl);
+                    imageRepository.save(image);
+
+                    uploadResults.add("Image uploaded successfully: " + uploadResult);
+                } else {
+                    uploadResults.add("Error uploading image.");
+                }
+
+            } catch (S3Exception | ImageUploadException e) {
                 // Manejo de excepciones
                 e.printStackTrace();
                 uploadResults.add("Error uploading image.");
@@ -165,6 +189,7 @@ public class ImageService implements IImageService{
 
         return uploadResults.toString();
     }
+
 
 
 

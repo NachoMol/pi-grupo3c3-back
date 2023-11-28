@@ -22,8 +22,6 @@ import org.springframework.web.filter.CorsFilter;
 
 import java.util.Arrays;
 
-import static com.amazonaws.util.AWSRequestMetrics.Field.Exception;
-
 @Configuration
 public class WebSecurityConfig {
 
@@ -71,6 +69,8 @@ public class WebSecurityConfig {
                 .antMatchers("/favorites/**").permitAll()
                 .antMatchers("/policies/**").permitAll()
                 .antMatchers("/users/**").permitAll()
+                .antMatchers("/api/s3/**").permitAll()
+                .antMatchers("https://bucket-explorer-images.s3.us-east-1.amazonaws.com/04.jpeg/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .addFilter(new JWTAuthenticationFilter(authenticationConfiguration.getAuthenticationManager()))

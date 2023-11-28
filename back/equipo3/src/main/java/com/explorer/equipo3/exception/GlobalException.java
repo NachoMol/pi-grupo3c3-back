@@ -27,4 +27,10 @@ public class GlobalException {
     public ResponseEntity<String> processImageUpload(ImageUploadException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body((exception.getMessage()));
     }
+
+    @ExceptionHandler({ImageDownloadException.class})
+        public ResponseEntity<String> processImageDownload(ImageDownloadException exception){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body((exception.getMessage()));
+        }
+
 }

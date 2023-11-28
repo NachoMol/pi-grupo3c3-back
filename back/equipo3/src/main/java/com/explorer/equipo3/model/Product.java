@@ -40,6 +40,7 @@ public class Product {
     private List<Reservation> reservations;
 
     @OneToMany(mappedBy = "product")
+    @JsonIgnore
     private List<Policy> policies;
 
 
