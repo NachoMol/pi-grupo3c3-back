@@ -71,9 +71,7 @@ public class ReservationService implements IReservationService{
         reservation.setCheckin(reservationDTO.getCheckin());
         reservation.setCheckout(reservationDTO.getCheckout());
         reservation.setPrice(reservationDTO.getPrice());
-
-
-
+        reservation.setState(true);
 
         if (validateReservation(reservation)) {
 

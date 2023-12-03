@@ -28,8 +28,9 @@ public interface IReservationRepository extends JpaRepository<Reservation,Long> 
 
     //state es el estado de la reservación si está false está cancelada, si está en true está activa
     @Query("SELECT r FROM Reservation r JOIN r.product p WHERE p.id = :productId AND r.checkout >= CURRENT_DATE AND r.state = true"+
-            "AND (p.state = true OR p.state IS NULL)")
+            " AND (p.state = true OR p.state IS NULL)")
     List<Reservation> findCurrentReservationsByProductId(Long productId);
+
 
     @Query("SELECT r FROM Reservation r JOIN r.user u WHERE u.id = :userId")
     Page<Reservation> findCurrentReservationsByUserId(Long userId, Pageable pageable);
