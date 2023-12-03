@@ -21,7 +21,7 @@ public class DatesReservationValidator implements ConstraintValidator<ValidateRe
         }
         LocalDate currenDate = LocalDate.now();
         //Validar que la fecha de inicio sea igual a la actual o mayor
-        if (reservation.getCheckin() != null && reservation.getCheckin().isAfter(currenDate)){
+        if (reservation.getCheckin() != null && reservation.getCheckin().isBefore(currenDate)){
             return false;
         }
         // Validar que la fecha de fin sea mayor que la fecha de inicio

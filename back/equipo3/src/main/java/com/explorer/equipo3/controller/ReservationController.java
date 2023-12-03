@@ -33,6 +33,7 @@ public class ReservationController {
             return ResponseEntity.status(HttpStatus.CREATED).body(newReservation);
 
         }catch (Exception e){
+            e.printStackTrace();  // Imprime la traza de la excepción en la consola
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
 

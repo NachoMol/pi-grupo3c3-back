@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import javax.mail.MessagingException;
 import javax.validation.Valid;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -70,7 +71,10 @@ public class ReservationService implements IReservationService{
         reservation.setUser(user.orElseThrow());
         reservation.setCheckin(reservationDTO.getCheckin());
         reservation.setCheckout(reservationDTO.getCheckout());
-        reservation.setPrice(reservationDTO.getPrice());
+        System.out.println("Precio del auto: " + reservation.getProduct().getPrice());
+        System.out.println("Cantidad de dias: " + ChronoUnit.DAYS.between(reservationDTO.getCheckin(), reservationDTO.getCheckout()));
+        reservation.setPrice(ChronoUnit.DAYS.between(reservationDTO.getCheckin(), reservationDTO.getCheckout()) * reservation.getProduct().getPrice());
+        System.out.println("Precio de reserva: " + reservation.getPrice());
         reservation.setState(true);
 
         if (validateReservation(reservation)) {
@@ -86,6 +90,7 @@ public class ReservationService implements IReservationService{
 
         } else {
             //Manejo de error o lanzar una excepción
+            System.out.println("entro a la exception");
             throw new ReservationInvalidException("La reserva no es válida");
         }
 
