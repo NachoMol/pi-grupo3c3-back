@@ -24,7 +24,6 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories(){
-        logger.info("metodo getAllCategories");
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
@@ -32,8 +31,10 @@ public class CategoryController {
     public ResponseEntity<?> getCategoryById(@PathVariable Long id){
         Optional<Category> categorySearch = categoryService.getCategoryById(id);
         if(categorySearch.isPresent()){
+            logger.info("La categoria buscada por ID es valida");
             return ResponseEntity.ok(categorySearch.orElseThrow());
         }
+        logger.info("La categoria buscada por ID no es valida");
         return ResponseEntity.notFound().build();
     }
 
