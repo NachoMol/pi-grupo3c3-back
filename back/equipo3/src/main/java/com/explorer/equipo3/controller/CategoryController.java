@@ -3,6 +3,8 @@ package com.explorer.equipo3.controller;
 import com.explorer.equipo3.model.Category;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.ICategoryService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,8 +20,11 @@ public class CategoryController {
     @Autowired
     private ICategoryService categoryService;
 
+    private static final Logger logger = LogManager.getLogger(CategoryController.class);
+
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories(){
+        logger.info("metodo getAllCategories");
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 

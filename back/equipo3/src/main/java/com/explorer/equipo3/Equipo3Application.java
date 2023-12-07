@@ -7,7 +7,6 @@ import org.springframework.context.annotation.ComponentScan;
 @SpringBootApplication
 
 public class Equipo3Application {
-
 	public static void main(String[] args) {
 		SpringApplication.run(Equipo3Application.class, args);
 	}
