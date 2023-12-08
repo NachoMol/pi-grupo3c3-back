@@ -24,6 +24,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<List<Category>> getAllCategories(){
+        logger.info("Todas las categorias fueron devueltas exitosamente");
         return ResponseEntity.ok(categoryService.getAllCategories());
     }
 
@@ -40,6 +41,7 @@ public class CategoryController {
 
     @PostMapping("/create")
     public ResponseEntity<?> addCategory(@RequestBody Category category){
+        logger.info("Categoria creada con exito");
         return ResponseEntity.status(HttpStatus.CREATED).body(categoryService.saveCategory(category));
     }
 
@@ -54,11 +56,14 @@ public class CategoryController {
 
     @DeleteMapping("/delete/{id}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long id){
+        logger.info("Ingresamos al metodo para eliminar una categoria");
         Optional categoryOptional = categoryService.getCategoryById(id);
         if(categoryOptional.isPresent()){
+            logger.info("la categoria fue eliminada con exito");
             categoryService.deleteCategoryById(id);
             return ResponseEntity.noContent().build();
         }
+        logger.info("La categoria no pudo ser eliminada");
         return ResponseEntity.notFound().build();
     }
 }
