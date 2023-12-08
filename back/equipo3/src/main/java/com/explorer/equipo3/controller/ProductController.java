@@ -10,6 +10,8 @@ import com.explorer.equipo3.service.ICategoryService;
 import com.explorer.equipo3.service.IDetailService;
 import com.explorer.equipo3.service.IImageService;
 import com.explorer.equipo3.service.IProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,6 +29,8 @@ import java.util.stream.Collectors;
 @RestController
 @RequestMapping("/products")
 public class ProductController {
+
+    private static final Logger logger = LogManager.getLogger(ProductController.class);
 
     @Autowired
     private IProductService productService;

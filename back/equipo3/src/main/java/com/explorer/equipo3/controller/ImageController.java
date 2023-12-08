@@ -3,6 +3,8 @@ import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.service.IImageService;
 import com.explorer.equipo3.service.IProductService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,8 @@ import java.util.Optional;
 @RequestMapping("/images")
 public class ImageController {
 
+    private static final Logger logger = LogManager.getLogger(ImageController.class);
+
     @Autowired
     private IImageService imageService;
 
@@ -28,22 +32,23 @@ public class ImageController {
 
     @GetMapping("/list")
     public ResponseEntity<List<Image>> getAllImages() {
+        logger.info("ingresamos al metodo de obtener todas las imagenes");
         List<Image> images = imageService.getAllImages(); // Obtener todas las imágenes desde el repositorio
         return new ResponseEntity<>(images, HttpStatus.OK);
     }
 
     @GetMapping("/{id}/url")
     public ResponseEntity<String> getImageUrlById(@PathVariable Long id) {
+        logger.info("ingresamos al metodo de obtener url de image por id");
         Optional<String> imageUrl = imageService.getImageUrlById(id);
-
         return imageUrl.map(url -> new ResponseEntity<>(url, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NO_CONTENT));
     }
 
     @GetMapping("/id/{id}")
     public ResponseEntity<byte[]> getImageById(@PathVariable Long id) {
+        logger.info("Ingresamos al metodo de obtener bytes de image por id");
         Optional<byte[]> imageBytes = imageService.getImageBytesById(id);
-
         return imageBytes.map(bytes -> {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG); // Ajusta según el tipo de archivo
@@ -55,6 +60,7 @@ public class ImageController {
 
     @PostMapping("/upload")
     public ResponseEntity<String> uploadImage(@RequestParam("file") MultipartFile file) throws Exception{
+        logger.info("ingresamos al metodo de subir imagen");
         return ResponseEntity.ok(imageService.uploadImage(file));
     }
 

@@ -1,10 +1,13 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.controller.CategoryController;
 import com.explorer.equipo3.exception.ImageUploadException;
 import com.explorer.equipo3.model.Image;
 import com.explorer.equipo3.model.Product;
 import com.explorer.equipo3.repository.IImageRepository;
 import org.apache.commons.io.IOUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +25,9 @@ import java.util.Optional;
 
 @Service
 public class ImageService implements IImageService{
+
+
+    private static final Logger logger = LogManager.getLogger(ImageService.class);
 
     @Autowired
     private IImageRepository imageRepository;
@@ -41,21 +47,22 @@ public class ImageService implements IImageService{
     @Override
     public Optional<String> getImageUrlById(Long id) {
         Optional<Image> optionalImage = imageRepository.findById(id);
-
+        logger.info("image encontrada, devolvemos la url");
         return optionalImage.map(Image::getUrl);
     }
 
     @Override
     public Optional<byte[]> getImageBytesById(Long id) {
         Optional<Image> optionalImage = imageRepository.findById(id);
-
         return optionalImage.map(image -> {
             try {
                 URL imageUrl = new URL(image.getUrl());
                 try (InputStream inputStream = imageUrl.openStream()) {
+                    logger.info("imagen encontrada,devolvemos array de bytes");
                     return IOUtils.toByteArray(inputStream);
                 }
             } catch (IOException e) {
+                logger.info("imagen no encontrada, error");
                 e.printStackTrace(); // Manejo apropiado de la excepción
                 return null;
             }
@@ -85,6 +92,7 @@ public class ImageService implements IImageService{
     @Override
     public String uploadImage(MultipartFile imageFile) throws Exception {
         try {
+            logger.info("guardamos la image");
             String filename = imageFile.getOriginalFilename().replaceAll("[^a-zA-Z0-9.-]", "_");
             String fileOriginalName = imageFile.getOriginalFilename();
 
