@@ -1,5 +1,6 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.controller.ProductController;
 import com.explorer.equipo3.exception.ReservationInvalidException;
 import com.explorer.equipo3.model.City;
 import com.explorer.equipo3.model.Product;
@@ -7,6 +8,8 @@ import com.explorer.equipo3.model.Reservation;
 import com.explorer.equipo3.model.User;
 import com.explorer.equipo3.model.dto.ReservationDTO;
 import com.explorer.equipo3.repository.IReservationRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -26,6 +29,8 @@ import java.util.Optional;
 
 @Service
 public class ReservationService implements IReservationService{
+
+    private static final Logger logger = LogManager.getLogger(ProductService.class);
 
     @Autowired
     IReservationRepository iReservationRepository;
@@ -71,10 +76,10 @@ public class ReservationService implements IReservationService{
         reservation.setUser(user.orElseThrow());
         reservation.setCheckin(reservationDTO.getCheckin());
         reservation.setCheckout(reservationDTO.getCheckout());
-        System.out.println("Precio del auto: " + reservation.getProduct().getPrice());
-        System.out.println("Cantidad de dias: " + ChronoUnit.DAYS.between(reservationDTO.getCheckin(), reservationDTO.getCheckout()));
+        logger.info("Precio del auto: " + reservation.getProduct().getPrice());
+        logger.info("Cantidad de dias: " + ChronoUnit.DAYS.between(reservationDTO.getCheckin(), reservationDTO.getCheckout()));
         reservation.setPrice(ChronoUnit.DAYS.between(reservationDTO.getCheckin(), reservationDTO.getCheckout()) * reservation.getProduct().getPrice());
-        System.out.println("Precio de reserva: " + reservation.getPrice());
+        logger.info("Precio de reserva: " + reservation.getPrice());
         reservation.setState(true);
 
         if (validateReservation(reservation)) {
@@ -85,12 +90,12 @@ public class ReservationService implements IReservationService{
                     newReservation.getProduct().getName(),
                     newReservation.getCheckin(),
                     newReservation.getCheckout());
-
+            logger.info("reservation creada");
             return newReservation;
 
         } else {
             //Manejo de error o lanzar una excepción
-            System.out.println("entro a la exception");
+            logger.info("entro a la exception");
             throw new ReservationInvalidException("La reserva no es válida");
         }
 

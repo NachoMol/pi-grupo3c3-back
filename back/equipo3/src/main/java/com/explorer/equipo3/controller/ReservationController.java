@@ -5,6 +5,8 @@ import com.explorer.equipo3.model.Reservation;
 import com.explorer.equipo3.model.dto.ReservationDTO;
 import com.explorer.equipo3.service.IReservationService;
 import com.explorer.equipo3.service.ReservationService;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -23,11 +25,14 @@ import java.util.Optional;
 @RequestMapping("/reservations")
 public class ReservationController {
 
+    private static final Logger logger = LogManager.getLogger(ReservationController.class);
+
     @Autowired
     private IReservationService reservationService;
 
     @PostMapping("/create")
     public ResponseEntity<?> saveReservation(@Valid @RequestBody ReservationDTO reservationDTO) throws RuntimeException {
+        logger.info("ingresamos al metodo de guardar reservation");
         try {
             Reservation newReservation = reservationService.saveReservation(reservationDTO);
             return ResponseEntity.status(HttpStatus.CREATED).body(newReservation);
