@@ -1,7 +1,11 @@
 package com.explorer.equipo3.service;
 
+import com.explorer.equipo3.controller.CityController;
+import com.explorer.equipo3.controller.CountryController;
 import com.explorer.equipo3.model.Country;
 import com.explorer.equipo3.repository.ICountryRepository;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
