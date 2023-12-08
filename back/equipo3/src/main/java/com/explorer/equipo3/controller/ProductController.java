@@ -46,7 +46,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<List<Product>> getAllProducts(){
-
+        logger.info("ingresamos al metodo de traer todos los products");
         return ResponseEntity.ok(productService.getAllProducts());
     }
 
@@ -62,10 +62,13 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> getProductById(@PathVariable Long id){
+        logger.info("ingresamos al metodo de retornar product por id");
         Optional<Product> productSearch = productService.getProductById(id);
         if(productSearch.isPresent()){
+            logger.info("producto encontrado");
             return ResponseEntity.ok(productSearch.orElseThrow());
         }
+        logger.info("producto no encontrado");
         return ResponseEntity.notFound().build();
 
 
@@ -73,10 +76,12 @@ public class ProductController {
 
     @GetMapping("/{productId}/images")
     public ResponseEntity<?> getProductImages(@PathVariable Long productId) {
+        logger.info("ingresamos al metodo de retornar imagenes del product");
         try {
             Optional<Product> optionalProduct = productService.getProductById(productId);
 
             if (optionalProduct.isPresent()) {
+                logger.info("product encontrado");
                 Product product = optionalProduct.get();
 
                 // Obtener las imágenes relacionadas con el producto desde el servicio de imágenes
@@ -88,8 +93,10 @@ public class ProductController {
                         .distinct()
                         .collect(Collectors.toList());
                 System.out.println("Image URLs: " + imageUrls);
+                logger.info("images encontradas");
                 return ResponseEntity.ok(imageUrls);
             } else {
+                logger.info("images no encontradas");
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
             }
         } catch (Exception e) {
@@ -101,6 +108,7 @@ public class ProductController {
     @PostMapping("/add")
     public ResponseEntity<?> add(@RequestParam("files") List<MultipartFile> files,
                                  @RequestParam("product") String productJson) {
+        logger.info("ingresamos al metodo de agregar images a product");
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             Product product = objectMapper.readValue(productJson, Product.class);
@@ -158,6 +166,7 @@ public class ProductController {
 
     @PostMapping("/create")
     public ResponseEntity<?> addProduct(@RequestBody Product product) throws DuplicatedValueException{
+        logger.info("ingresamos al metodo de añadir product");
         try {
             // Obtén el ID de categoría desde la solicitud
             Long categoryId = product.getCategory().getId();
@@ -188,6 +197,7 @@ public class ProductController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct){
+        logger.info("ingresamos al metodo de update product por id");
         Optional<Product> productOptional = productService.getProductById(id);
         if(productOptional.isPresent()){
             Product product = productOptional.get();
@@ -208,13 +218,16 @@ public class ProductController {
             product.setDetails(updatedProduct.getDetails());
 
             Product savedProduct = productService.saveProduct(product);
+            logger.info("product actualizado");
             return ResponseEntity.status(HttpStatus.CREATED).body(savedProduct);
         }
+        logger.info("product no encontrado");
         return ResponseEntity.notFound().build();
     }
 
     @PutMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id){
+        logger.info("ingresamos al metodo de eliminar product");
         Optional productOptional = productService.getProductById(id);
         if(productOptional.isPresent()){
             productService.deleteProductById(id);
@@ -227,9 +240,11 @@ public class ProductController {
     public ResponseEntity<Product> addDetailsToProduct(
             @PathVariable Long id,
             @RequestBody Set<Long> detailIds) {
-        System.out.println("Received detailIds: " + detailIds);
+        logger.info("ingresamos al metodo de añadir details a product");
+        logger.info("Received detailIds: " + detailIds);
         Optional<Product> productOptional = productService.getProductById(id);
         if (productOptional.isPresent()) {
+            logger.info("product encontrado");
             Product product = productOptional.get();
 
             // Aquí debes convertir los IDs en objetos Detail y agregarlos al producto
@@ -242,8 +257,10 @@ public class ProductController {
             }
 
             Product updatedProduct = productService.saveProduct(product);
+            logger.info("details del product actualizado");
             return ResponseEntity.ok(updatedProduct);
         } else {
+            logger.info("product no encontrado");
             return ResponseEntity.notFound().build();
         }
     }
