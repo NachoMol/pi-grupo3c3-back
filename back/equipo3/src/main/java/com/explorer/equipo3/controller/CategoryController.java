@@ -47,6 +47,7 @@ public class CategoryController {
 
     @PutMapping("/update/{id}")
     public ResponseEntity<?> updateCategory(@PathVariable Long id, @RequestBody Category category){
+        logger.info("Ingresamos al metodo de actualizar category");
         Optional<Category> categoryOptional = categoryService.updateCategory(id, category);
         if(categoryOptional.isPresent()){
             return ResponseEntity.status(HttpStatus.CREATED).build();
