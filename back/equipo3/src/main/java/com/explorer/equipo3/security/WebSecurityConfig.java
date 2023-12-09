@@ -55,7 +55,8 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/products", "/categories").hasRole("ADMIN")
 
                 .antMatchers(HttpMethod.GET, "/reservations/**").permitAll()
-                .antMatchers(HttpMethod.POST, "/reservations/**", "/reservations/{id}/**", "/reservations/{id}/**").hasRole("ADMIN")
+                //  .antMatchers(HttpMethod.POST, "/reservations/**", "/reservations/{id}/**", "/reservations/{id}/**").hasRole("ADMIN")
+                .antMatchers(HttpMethod.POST, "/reservations/**", "/reservations/{id}/**", "/reservations/{id}/**").permitAll()
                 .antMatchers(HttpMethod.PUT, "/reservations/**").hasRole("ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/reservations/{id}").hasRole("ADMIN")
 
