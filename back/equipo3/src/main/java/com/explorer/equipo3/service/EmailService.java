@@ -25,7 +25,7 @@ public class EmailService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
 
         mimeMessageHelper.setTo(addressee);
-        mimeMessageHelper.setSubject("Confirmación de Registro");
+        mimeMessageHelper.setSubject("Welcome to Explorer App");
 
         Context context = new Context();
         context.setVariable("nameUser", nameUser);
@@ -43,7 +43,7 @@ public class EmailService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
 
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("Confirmación de Registro");
+        mimeMessageHelper.setSubject("Booking Confirmation");
 
         Context context = new Context();
         context.setVariable("nameUser",nameUser);
@@ -63,7 +63,7 @@ public class EmailService {
         MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, false, "utf-8");
 
         mimeMessageHelper.setTo(email);
-        mimeMessageHelper.setSubject("Confirmación de Registro");
+        mimeMessageHelper.setSubject("Booking Confirmation");
 
         Context context = new Context();
         context.setVariable("nameUser",nameUser);
