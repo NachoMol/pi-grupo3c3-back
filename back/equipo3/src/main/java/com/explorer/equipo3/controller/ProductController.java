@@ -195,7 +195,7 @@ public class ProductController {
 
 
 
-    @PutMapping("/update/{id}")
+    /*@PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct){
         logger.info("ingresamos al metodo de update product por id");
         Optional<Product> productOptional = productService.getProductById(id);
@@ -206,16 +206,21 @@ public class ProductController {
             product.setCategory(updatedProduct.getCategory());
             product.setName(updatedProduct.getName());
             product.setPrice(updatedProduct.getPrice());
-            // Actualiza otros campos si es necesario
+            product.setCity(updatedProduct.getCity());
 
             // Conserva las especificaciones (details) existentes
             Set<Detail> existingDetails = product.getDetails();
-            if (existingDetails != null && !existingDetails.isEmpty()) {
-                updatedProduct.getDetails().addAll(existingDetails);
-            }
+
 
             // Asigna los detalles actualizados al producto
-            product.setDetails(updatedProduct.getDetails());
+            Set<Detail> updatedDetails = updatedProduct.getDetails();
+            if (updatedDetails != null) {
+                // Conserva los detalles existentes solo si hay detalles actualizados
+                if (existingDetails != null && !existingDetails.isEmpty()) {
+                    updatedDetails.addAll(existingDetails);
+                }
+                product.setDetails(updatedDetails);
+            }
 
             Product savedProduct = productService.saveProduct(product);
             logger.info("product actualizado");
@@ -223,7 +228,55 @@ public class ProductController {
         }
         logger.info("product no encontrado");
         return ResponseEntity.notFound().build();
+    }*/
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+        logger.info("Ingresamos al método de actualización de producto por ID");
+
+        Optional<Product> productOptional = productService.getProductById(id);
+
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+
+            // Actualiza solo los campos proporcionados en la solicitud
+            if (updatedProduct.getCategory() != null) {
+                product.setCategory(updatedProduct.getCategory());
+            }
+
+            if (updatedProduct.getName() != null) {
+                product.setName(updatedProduct.getName());
+            }
+
+            if (updatedProduct.getPrice() != null) {
+                product.setPrice(updatedProduct.getPrice());
+            }
+
+            if (updatedProduct.getCity() != null) {
+                product.setCity(updatedProduct.getCity());
+            }
+
+            // Conserva las especificaciones (details) existentes
+            Set<Detail> existingDetails = product.getDetails();
+
+            // Actualiza los detalles solo si se proporcionan en la solicitud
+            if (updatedProduct.getDetails() != null) {
+                Set<Detail> updatedDetails = updatedProduct.getDetails();
+                if (existingDetails != null && !existingDetails.isEmpty()) {
+                    updatedDetails.addAll(existingDetails);
+                }
+                product.setDetails(updatedDetails);
+            }
+
+            Product savedProduct = productService.saveProduct(product);
+            logger.info("Producto actualizado");
+            return ResponseEntity.status(HttpStatus.OK).body(savedProduct);
+        }
+
+        logger.info("Producto no encontrado");
+        return ResponseEntity.notFound().build();
     }
+
 
     @PutMapping("/delete/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id){
