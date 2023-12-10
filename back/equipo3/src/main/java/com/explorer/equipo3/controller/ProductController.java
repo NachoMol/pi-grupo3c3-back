@@ -256,15 +256,9 @@ public class ProductController {
                 product.setCity(updatedProduct.getCity());
             }
 
-            // Conserva las especificaciones (details) existentes
-            Set<Detail> existingDetails = product.getDetails();
-
-            // Actualiza los detalles solo si se proporcionan en la solicitud
+            // Reemplazar completamente la lista de detalles existente con la nueva lista
             if (updatedProduct.getDetails() != null) {
                 Set<Detail> updatedDetails = updatedProduct.getDetails();
-                if (existingDetails != null && !existingDetails.isEmpty()) {
-                    updatedDetails.addAll(existingDetails);
-                }
                 product.setDetails(updatedDetails);
             }
 
