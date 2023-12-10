@@ -93,6 +93,7 @@ public class ProductService implements IProductService{
             productDB.setCategory(product.getCategory());
             productDB.setName(product.getName());
             productDB.setDetails(product.getDetails());
+            productDB.setState(product.getState());
             productOptional = productRepository.save(productDB);
         }
         return Optional.ofNullable(productOptional);

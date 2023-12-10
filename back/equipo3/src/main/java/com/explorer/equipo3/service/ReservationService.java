@@ -19,7 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import javax.mail.MessagingException;
+import javax.mail.MessagingException; 
 import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
@@ -135,6 +135,7 @@ public class ReservationService implements IReservationService{
                 reservatiosUpdate.setCheckin(reservation.getCheckin());
                 reservatiosUpdate.setCheckout(reservation.getCheckout());
                 reservatiosUpdate.setProduct(reservation.getProduct());
+                reservatiosUpdate.setState(reservation.getState());
                 reservationResult = iReservationRepository.save(reservatiosUpdate);
                 sentMail(reservation.getUser().getEmail(),
                         reservation.getUser().getName() + " " + reservation.getUser().getLastname(),
