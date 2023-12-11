@@ -230,7 +230,7 @@ public class ProductController {
         return ResponseEntity.notFound().build();
     }*/
 
-    @PutMapping("/update/{id}")
+    /*@PutMapping("/update/{id}")
     public ResponseEntity<?> updateProduct(@PathVariable Long id,
                                            @RequestPart(value = "product", required = false) Product updatedProduct,
                                            @RequestPart(value = "images", required = false) MultipartFile[] images) {
@@ -247,7 +247,7 @@ public class ProductController {
                     product.setCategory(updatedProduct.getCategory());
                 }
 
-                if (updatedProduct.getName() != null) {
+                if (updatedProduct.getName() != null && !updatedProduct.getName().isEmpty()) {
                     product.setName(updatedProduct.getName());
                 }
 
@@ -258,6 +258,9 @@ public class ProductController {
                 if (updatedProduct.getCity() != null) {
                     product.setCity(updatedProduct.getCity());
                 }
+
+                // Conserva las especificaciones (details) existentes
+                Set<Detail> existingDetails = product.getDetails();
 
                 // Reemplazar completamente la lista de detalles existente con la nueva lista
                 if (updatedProduct.getDetails() != null) {
@@ -305,6 +308,50 @@ public class ProductController {
                     logger.error("Error al actualizar imágenes", e);
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
                 }
+            }
+
+            Product savedProduct = productService.saveProduct(product);
+            logger.info("Producto actualizado");
+            return ResponseEntity.status(HttpStatus.OK).body(savedProduct);
+        }
+
+        logger.info("Producto no encontrado");
+        return ResponseEntity.notFound().build();
+    }*/
+
+    @PutMapping("/update/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+        logger.info("Ingresamos al método de actualización de producto por ID");
+
+        Optional<Product> productOptional = productService.getProductById(id);
+
+        if (productOptional.isPresent()) {
+            Product product = productOptional.get();
+
+            // Actualiza solo los campos proporcionados en la solicitud
+            if (updatedProduct.getCategory() != null) {
+                product.setCategory(updatedProduct.getCategory());
+            }
+
+            if (updatedProduct.getName() != null) {
+                product.setName(updatedProduct.getName());
+            }
+
+            if (updatedProduct.getPrice() != null) {
+                product.setPrice(updatedProduct.getPrice());
+            }
+
+            if (updatedProduct.getCity() != null) {
+                product.setCity(updatedProduct.getCity());
+            }
+
+            // Conserva las especificaciones (details) existentes
+            Set<Detail> existingDetails = product.getDetails();
+
+            // Actualiza los detalles solo si se proporcionan en la solicitud
+            if (updatedProduct.getDetails() != null) {
+                Set<Detail> updatedDetails = updatedProduct.getDetails();
+                product.setDetails(updatedDetails);
             }
 
             Product savedProduct = productService.saveProduct(product);
