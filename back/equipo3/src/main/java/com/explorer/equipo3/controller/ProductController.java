@@ -231,7 +231,9 @@ public class ProductController {
     }*/
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody Product updatedProduct) {
+    public ResponseEntity<?> updateProduct(@PathVariable Long id,
+                                           @RequestPart(value = "product", required = false) Product updatedProduct,
+                                           @RequestPart(value = "images", required = false) MultipartFile[] images) {
         logger.info("Ingresamos al método de actualización de producto por ID");
 
         Optional<Product> productOptional = productService.getProductById(id);
@@ -240,26 +242,69 @@ public class ProductController {
             Product product = productOptional.get();
 
             // Actualiza solo los campos proporcionados en la solicitud
-            if (updatedProduct.getCategory() != null) {
-                product.setCategory(updatedProduct.getCategory());
+            if (updatedProduct != null) {
+                if (updatedProduct.getCategory() != null) {
+                    product.setCategory(updatedProduct.getCategory());
+                }
+
+                if (updatedProduct.getName() != null) {
+                    product.setName(updatedProduct.getName());
+                }
+
+                if (updatedProduct.getPrice() != null) {
+                    product.setPrice(updatedProduct.getPrice());
+                }
+
+                if (updatedProduct.getCity() != null) {
+                    product.setCity(updatedProduct.getCity());
+                }
+
+                // Reemplazar completamente la lista de detalles existente con la nueva lista
+                if (updatedProduct.getDetails() != null) {
+                    Set<Detail> updatedDetails = updatedProduct.getDetails();
+                    product.setDetails(updatedDetails);
+                }
             }
 
-            if (updatedProduct.getName() != null) {
-                product.setName(updatedProduct.getName());
-            }
+            // Actualizar imágenes solo si se proporcionan nuevas imágenes
+            if (images != null && images.length > 0) {
+                try {
+                    // Subir nuevas imágenes
+                    List<MultipartFile> imageFiles = Arrays.asList(images);
+                    String uploadResult = imageService.uploadImages(imageFiles);
 
-            if (updatedProduct.getPrice() != null) {
-                product.setPrice(updatedProduct.getPrice());
-            }
+                    if (uploadResult.contains("Error uploading image.")) {
+                        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                    }
 
-            if (updatedProduct.getCity() != null) {
-                product.setCity(updatedProduct.getCity());
-            }
+                    // Asociar las nuevas imágenes al producto
+                    List<Image> newImages = new ArrayList<>();
+                    for (MultipartFile imageFile : imageFiles) {
+                        Image newImage = new Image();
 
-            // Reemplazar completamente la lista de detalles existente con la nueva lista
-            if (updatedProduct.getDetails() != null) {
-                Set<Detail> updatedDetails = updatedProduct.getDetails();
-                product.setDetails(updatedDetails);
+                        try {
+                            String filename = imageFile.getOriginalFilename();
+                            newImage.setFilename(filename);
+
+                            String imageUrl = "https://s3.amazonaws.com/bucket-explorer-images/" + filename;
+                            newImage.setUrl(imageUrl);
+
+                            newImage.setProduct(product);
+
+                            newImages.add(newImage);
+
+                        } catch (S3Exception e) {
+                            e.printStackTrace();
+                            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                        }
+                    }
+
+                    // Reemplazar completamente la lista de imágenes existente con las nuevas
+                    product.setImages(newImages);
+                } catch (Exception e) {
+                    logger.error("Error al actualizar imágenes", e);
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+                }
             }
 
             Product savedProduct = productService.saveProduct(product);
